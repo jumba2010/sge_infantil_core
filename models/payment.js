@@ -6,7 +6,7 @@ const Payment = sequelize.define('Payment', {
   year: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true}},
   total: {type:Sequelize.DOUBLE(14,4),allowNull:false,validate: {notNull: true}},
   fine: {type:Sequelize.DOUBLE(14,4),allowNull:false,validate: {notNull: true}},
-  discount: {type:Sequelize.DOUBLE(1,4),allowNull:false,validate: {notNull: true}},
+  discount: {type:Sequelize.DOUBLE(5,4),allowNull:false,validate: {notNull: true}},
   status: {type:Sequelize.STRING,allowNull:false,validate: {notNull: true}},
   registrationId: {
     type: Sequelize.INTEGER,

@@ -3,17 +3,17 @@ const Student=require('../models/student');
 const router=express.Router();
  
 router.post('/', async (req,res)=>{
-    const {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,createdBy,activatedby}=req.body; 
-    Student.create({name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,createdBy,activatedby}).then(function(worker) {
+    const {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,createdBy,activatedby}=req.body; 
+    Student.create({name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,createdBy,activatedby}).then(function(worker) {
         res.send(worker);
       })
 });
 
 router.put('/:id', async (req,res)=>{
-  const {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,updatedBy}=req.body;  
+  const {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,updatedBy}=req.body;  
   Student.update(
-      {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,updatedBy},
-      {fields: ['name','address','sex','birthDate','docType','docNumber','studentNumber','motherName','fatherName','updatedBy']},
+      {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,updatedBy},
+      {fields: ['name','address','sex','birthDate','docType','docNumber','studentNumber','motherName','fatherName','updatedBy','picture']},
       { where: { id:req.params.id} }
     )
       .then(result =>

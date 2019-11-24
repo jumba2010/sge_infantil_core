@@ -27,14 +27,14 @@ const User = sequelize.define('user', {
   updatedBy:{type:Sequelize.INTEGER,  field: 'updated_by'},
   activatedBy: {type:Sequelize.INTEGER, field: 'activated_by',allowNull:false,validate: {notNull: true}},
   activationDate: {type:Sequelize.DATE, field: 'activation_date',allowNull:false,defaultValue: Sequelize.NOW,validate: {notNull: true}},
-  defaultScope: {
+},{defaultScope: {
     where: {
       active: true
     },
     include: [
       { model: Profile, where: { active: true }}
     ]
-  },
-});
+  },}
+);
 
 module.exports = User;

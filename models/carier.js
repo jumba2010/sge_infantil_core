@@ -4,7 +4,7 @@ const Student=require('./student');
 const Carier = sequelize.define('Carier', {
   name: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   kinshipDegree: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
-  principal: {type:Sequelize.BOOLEAN,allowNull:false, validate: {notNull: true}},
+  principal: {type:Sequelize.BOOLEAN,allowNull:false, validate: {notNull: true},defaultValue:true},
   contact: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   docType: {type:Sequelize.STRING},
   docNumber: {type:Sequelize.STRING},

@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
-const Class=require('./class');
+const Frequency=require('./frequency');
 const Tax = sequelize.define('Tax', {
   startDate: {type:Sequelize.DATEONLY, field:'start_date',validate: { isAfter: Sequelize.NOW}},
   registrationValue: {type:Sequelize.DOUBLE(14,4), allowNull:false,validate: {notNull: true, isDecimal: true }},
@@ -9,7 +9,7 @@ const Tax = sequelize.define('Tax', {
     type: Sequelize.INTEGER,
     field: 'class_id',
     references: {
-      model: Class,
+      model: Frequency,
       key: 'id', 
     },allowNull:false,
     validate: {notNull: true}

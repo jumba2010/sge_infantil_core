@@ -6,6 +6,7 @@ const cron = require('node-cron');
 const keys = require('../config/keys');
 const Product=require('../models/product');
 
+
 //Task que corre 1 em 1 hora 
 var task =cron.schedule('1 * * * *', () => {
   var options = {

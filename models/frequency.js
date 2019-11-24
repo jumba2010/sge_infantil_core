@@ -1,8 +1,8 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const Sucursal=require('./sucursal');
-const Class = sequelize.define('Class', {
-  level: {type:Sequelize.NUMBER,allowNull:false, validate: {notNull: true}},
+const Frequency = sequelize.define('Frequency', {
+  level: {type:Sequelize.INTEGER,allowNull:false, validate: {notNull: true}},
   sucursalId: {
     type: Sequelize.INTEGER,
     field: 'sucursal_id',
@@ -25,4 +25,4 @@ const Class = sequelize.define('Class', {
     }
   },
 });
-module.exports = Class;
+module.exports = Frequency;

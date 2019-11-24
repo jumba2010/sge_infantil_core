@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const Student=require('./student');
 const Sucursal=require('./sucursal');
-const Class=require('./class');
+const Class=require('./frequency');
 const Registration = sequelize.define('Registration', {
   totalPaid: {type:Sequelize.DOUBLE(14,4),allowNull:false, validate: {notNull: true}},
   discount: {type:Sequelize.DOUBLE(10,4),allowNull:false,defaultValue:0.0000, validate: {notNull: true}},
