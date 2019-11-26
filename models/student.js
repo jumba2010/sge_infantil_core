@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
+const Sucursal=require('./sucursal');
 const Student = sequelize.define('Student', {
   name: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,notEmpty: true}},
   address: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
@@ -10,7 +11,18 @@ const Student = sequelize.define('Student', {
   docNumber:{type:Sequelize.STRING, allowNull:false,validate: {notNull: true}},
   studentNumber: {type:Sequelize.STRING}, 
   motherName:{type:Sequelize.STRING, allowNull:false,validate: {notNull: true}},
+  motherContact:Sequelize.STRING,
+  fatherContact:Sequelize.STRING,
   fatherName:{type:Sequelize.STRING, allowNull:false,validate: {notNull: true}}, 
+  sucursalId: {
+    type: Sequelize.INTEGER,
+    field: 'sucursal_id',
+    references: {
+      model: Sucursal,
+      key: 'id', 
+    },allowNull:false,
+    validate: {notNull: true}
+  },
   active:{type:Sequelize.BOOLEAN,defaultValue:true,allowNull:false, validate: {notNull: true}},
   createdBy:{type:Sequelize.INTEGER,  field: 'created_by',allowNull:false,validate: {notNull: true}},
   updatedBy:{type:Sequelize.INTEGER,  field: 'updated_by'},

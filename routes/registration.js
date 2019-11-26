@@ -4,8 +4,8 @@ const router=express.Router();
  
 //Cria Membro
 router.post('/', async (req,res)=>{
-    const {totalPaid,discount,newStudennt,studentId,sucursalId,classId,createdBy,activatedBy}=req.body; 
-    Registration.create({totalPaid,discount,newStudennt,studentId,sucursalId,classId,createdBy,activatedBy}
+    const {totalPaid,monthlyPayment,discount,newStudennt,studentId,sucursalId,classId,createdBy,activatedBy}=req.body; 
+    Registration.create({totalPaid,monthlyPayment,discount,newStudennt,studentId,sucursalId,classId,createdBy,activatedBy}
       ).then(function(worker) {
         res.send(worker);
       })

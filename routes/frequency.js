@@ -50,7 +50,7 @@ router.get('/:sucursalId/:page', async (req,res)=>{
 });
 
 router.get('/:sucursalId', async (req,res)=>{
-Frequency.findAll({where:{ sucursalId:req.params.sucursalId},order: 'createdAt DESC' }).then(function(requencyes) {
+Frequency.findAll({where:{ sucursalId:req.params.sucursalId} }).then(function(requencyes) {
       res.send(requencyes);
     });   
 });

@@ -39,7 +39,7 @@ router.put('/inativate/:id', async (req,res)=>{
 });
 
 router.get('/:classId', async (req,res)=>{
-Tax.findOne({where:{ classId:req.params.classId}, order: 'createdAt DESC' }).then(function(tax) {
+Tax.findOne({where:{ classId:req.params.classId}}).then(function(tax) {
       res.send(tax);
     });   
 });

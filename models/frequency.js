@@ -3,6 +3,7 @@ const sequelize = require('../config/dbconfig');
 const Sucursal=require('./sucursal');
 const Frequency = sequelize.define('Frequency', {
   level: {type:Sequelize.INTEGER,allowNull:false, validate: {notNull: true}},
+  description: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   sucursalId: {
     type: Sequelize.INTEGER,
     field: 'sucursal_id',

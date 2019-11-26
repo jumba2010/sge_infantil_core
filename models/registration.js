@@ -4,9 +4,10 @@ const Student=require('./student');
 const Sucursal=require('./sucursal');
 const Class=require('./frequency');
 const Registration = sequelize.define('Registration', {
+  monthlyPayment: {type:Sequelize.DOUBLE(14,4),allowNull:false, validate: {notNull: true}},
   totalPaid: {type:Sequelize.DOUBLE(14,4),allowNull:false, validate: {notNull: true}},
-  discount: {type:Sequelize.DOUBLE(10,4),allowNull:false,defaultValue:0.0000, validate: {notNull: true}},
-  newStudennt:{type:Sequelize.BOOLEAN,allowNull:false, validate: {notNull: true}},
+  discount: {type:Sequelize.DOUBLE(4,2),allowNull:false,defaultValue:0.00, validate: {notNull: true}},
+  newStudennt:{type:Sequelize.BOOLEAN,allowNull:false,defaultValue:true, validate: {notNull: true}},
   studentId: {
     type: Sequelize.INTEGER,
     field: 'student_id',

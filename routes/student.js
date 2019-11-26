@@ -3,9 +3,9 @@ const Student=require('../models/student');
 const router=express.Router();
  
 router.post('/', async (req,res)=>{
-    const {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,createdBy,activatedby}=req.body; 
-    Student.create({name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,createdBy,activatedby}).then(function(worker) {
-        res.send(worker);
+    const {name,address,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,sucursalId,createdBy,activatedBy}=req.body; 
+    Student.create({name,address,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,sucursalId,createdBy,activatedBy}).then(function(student) {
+        res.send(student);
       })
 });
 
@@ -45,8 +45,8 @@ router.get('/:page', async (req,res)=>{
       });   
 });
 
-router.get('/', async (req,res)=>{
-Student.findAll({order: 'createdAt DESC' }).then(function(students) {
+router.get('/sucursal/:sucursalId', async (req,res)=>{
+Student.findAll({where:{ sucursalId:req.params.sucursalId},order: 'createdAt DESC' }).then(function(students) {
       res.send(students);
     });   
 });

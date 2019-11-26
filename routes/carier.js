@@ -6,8 +6,8 @@ const router=express.Router();
 router.post('/', async (req,res)=>{
     const {name,kinshipDegree,principal,contact,docType,docNumber,workPlace,studentId,createdBy,activatedBy}=req.body; 
     Carier.create({name,kinshipDegree,principal,contact,docType,docNumber,workPlace,studentId,createdBy,activatedBy}
-      ).then(function(worker) {
-        res.send(worker);
+      ).then(function(carier) {
+        res.send(carier);
       })
 });
 
