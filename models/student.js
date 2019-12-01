@@ -14,6 +14,8 @@ const Student = sequelize.define('Student', {
   motherContact:Sequelize.STRING,
   fatherContact:Sequelize.STRING,
   fatherName:{type:Sequelize.STRING, allowNull:false,validate: {notNull: true}}, 
+  currentMonthlyPayment: {type:Sequelize.DOUBLE(14,4),allowNull:false, validate: {notNull: true}},
+  level: {type:Sequelize.INTEGER,allowNull:false, validate: {notNull: true}},
   sucursalId: {
     type: Sequelize.INTEGER,
     field: 'sucursal_id',

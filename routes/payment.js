@@ -57,6 +57,14 @@ Payment.findAll({order: 'createdAt DESC' }).then(function(payments) {
     });   
 });
 
+router.get('/mypayments/:studentId', async (req,res)=>{
+  Payment.findAll({where:{studentId:req.params.studentId}, order: [
+    ['month', 'ASC'],
+],}).then(function(payments) {
+        res.send(payments);
+      });   
+  });
+  
 //Busca total
 router.get('/count/all/payments', async (req,res)=>{   
   Payment.count()

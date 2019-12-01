@@ -1,19 +1,20 @@
 const express=require('express');
 const Student=require('../models/student');
+const Payment=require('../models/payment');
 const router=express.Router();
  
 router.post('/', async (req,res)=>{
-    const {name,address,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,sucursalId,createdBy,activatedBy}=req.body; 
-    Student.create({name,address,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,sucursalId,createdBy,activatedBy}).then(function(student) {
+    const {name,address,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}=req.body; 
+    Student.create({name,address,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}).then(function(student) {
         res.send(student);
       })
 });
 
 router.put('/:id', async (req,res)=>{
-  const {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,updatedBy}=req.body;  
+  const {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,currentMonthlyPayment,level,updatedBy}=req.body;  
   Student.update(
-      {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,updatedBy},
-      {fields: ['name','address','sex','birthDate','docType','docNumber','studentNumber','motherName','fatherName','updatedBy','picture']},
+      {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,currentMonthlyPayment,level,fatherName,picture,updatedBy},
+      {fields: ['name','address','sex','birthDate','docType','docNumber','currentMonthlyPayment','level','studentNumber','motherName','fatherName','updatedBy','picture']},
       { where: { id:req.params.id} }
     )
       .then(result =>
@@ -46,8 +47,19 @@ router.get('/:page', async (req,res)=>{
 });
 
 router.get('/sucursal/:sucursalId', async (req,res)=>{
-Student.findAll({where:{ sucursalId:req.params.sucursalId},order: 'createdAt DESC' }).then(function(students) {
-      res.send(students);
+Student.findAll({raw: true,where:{ sucursalId:req.params.sucursalId} }).then( async function(students) {
+
+  var newList=[]
+  for (let index = 0; index < students.length; index++) {
+    const element = students[index];
+   let payments=await Payment.findAll({ raw: true,where:{studentId:element.id}, order: [
+       ['month', 'ASC'],
+], });
+    element.payments=payments;
+    newList.push(element)
+   
+  }
+      res.send(newList);
     });   
 });
 

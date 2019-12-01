@@ -1,13 +1,23 @@
 const express=require('express');
 const Registration=require('../models/registration');
+const Payment=require('../models/payment');
+var moment = require('moment');
 const router=express.Router();
  
 //Cria Membro
 router.post('/', async (req,res)=>{
-    const {totalPaid,monthlyPayment,discount,newStudennt,studentId,sucursalId,classId,createdBy,activatedBy}=req.body; 
+    const {totalPaid,monthlyPayment,discount,newStudennt,studentId,sucursalId,classId,year,createdBy,activatedBy}=req.body; 
+    paymentLimitDate=6; //Por enquanto colocando a data limite para dia 5 do Mês seguinte
     Registration.create({totalPaid,monthlyPayment,discount,newStudennt,studentId,sucursalId,classId,createdBy,activatedBy}
-      ).then(function(worker) {
-        res.send(worker);
+      ).then(function(registration) {       
+        for(i=1; i<=11;i++){
+          let limitDate=moment([year, i, paymentLimsitDate])
+          limitDate.utc().format("YYYY-MM-DD");       
+          Payment.create({month:i,year,total:monthlyPayment,limitDate:limitDate.utc().format("YYYY-MM-DD"),discount,registrationId:registration.id,studentId,createdBy,activatedBy}
+            )
+        }
+        res.send(registration);
+
       })
 });
 
