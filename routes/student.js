@@ -72,6 +72,13 @@ router.get('/count/all/students', async (req,res)=>{
 });
 });
 
+router.get('/unique/:id', async (req,res)=>{
+  Student.findOne({where:{id:req.params.id}
+}).then(function(student) {
+        res.send(student);
+      });   
+  });
+
 //Busca pela sucursal
 router.get('/sucursal/:sucursalId/:page', async (req,res)=>{
   var page=req.params.page;

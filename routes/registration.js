@@ -11,9 +11,9 @@ router.post('/', async (req,res)=>{
     Registration.create({totalPaid,monthlyPayment,discount,newStudennt,studentId,sucursalId,classId,createdBy,activatedBy}
       ).then(function(registration) {       
         for(i=1; i<=11;i++){
-          let limitDate=moment([year, i, paymentLimsitDate])
+          let limitDate=moment([year, i, paymentLimitDate])
           limitDate.utc().format("YYYY-MM-DD");       
-          Payment.create({month:i,year,total:monthlyPayment,limitDate:limitDate.utc().format("YYYY-MM-DD"),discount,registrationId:registration.id,studentId,createdBy,activatedBy}
+          Payment.create({month:i,year,total:monthlyPayment,limitDate:limitDate.utc().format("YYYY-MM-DD"),discount,registrationId:registration.id,studentId,sucursalId,createdBy,activatedBy}
             )
         }
         res.send(registration);
