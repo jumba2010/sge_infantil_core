@@ -6,7 +6,6 @@ const worker = require('./routes/worker');
 const auth = require('./routes/auth');
 const student = require('./routes/student');
 const carier = require('./routes/carier');
-const tax = require('./routes/tax');
 const profile = require('./routes/profile');
 const payment = require('./routes/payment');
 const sucursal = require('./routes/sucursal');
@@ -37,7 +36,6 @@ app.use('/api/payment', payment);
 app.use('/api/sucursal', sucursal);
 app.use('/api/registration', registration);
 app.use('/api/frequency', frequency);
-app.use('/api/tax', tax);
 
 app.use('/public/files', express.static(__dirname + '/public/files'));
 app.use(express.static(__dirname + '/public'));

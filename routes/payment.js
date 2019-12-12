@@ -1,6 +1,6 @@
 const express=require('express');
 const Payment=require('../models/payment');
-var moment = require('moment');
+const Student=require('../models/student');
 const router=express.Router();
  
 //Cria Membro
@@ -90,20 +90,42 @@ router.get('/mypayments/:studentId', async (req,res)=>{
   });
 
   router.get('/unpaid/:sucursalId', async (req,res)=>{
-    Payment.findAll({where:{sucursalId:req.params.sucursalId,status:0,hasFine:true}, order: [
-      ['year', 'ASC'], ['month', 'ASC']
-  ],}).then(function(payments) {
-          res.send(payments);
-        });   
+         
+        Payment.findAll({raw: true,where:{sucursalId:req.params.sucursalId,status:0,hasFine:true}, order: [
+          ['year', 'ASC'], ['month', 'ASC']
+      ],}).then(async function(payments) {
+             var newList=[]
+              for (let index = 0; index < payments.length; index++) {
+                const element = payments[index];
+               let student=await  Student.findOne({where:{id:payments[index].studentId}
+               });   
+               element.student=student;
+              newList.push(element)   
+               
+              }   
+               res.send(newList);
+           
+            }); 
     });
 
     router.get('/paid/:sucursalId/:year', async (req,res)=>{
-      Payment.findAll({where:{sucursalId:req.params.sucursalId,year:req.params.year}, order: [
+      Payment.findAll({raw: true,where:{sucursalId:req.params.sucursalId,year:req.params.year,status:1}, order: [
         ['year', 'ASC'], ['month', 'ASC']
-    ],}).then(function(payments) {
-            res.send(payments);
-          });   
-      });
+    ],}).then(async function(payments) {
+           var newList=[]
+            for (let index = 0; index < payments.length; index++) {
+              const element = payments[index];
+             let student=await  Student.findOne({where:{id:payments[index].studentId}
+             });   
+             element.student=student;
+            newList.push(element)   
+             
+            }   
+             res.send(newList);
+         
+          });          
+      
+        });
     
   
 //Busca total

@@ -10,13 +10,15 @@ router.post('/', async (req,res)=>{
       })
 });
 
-//Actualiza Obreiro
+//Actualiza Taxa
 router.put('/:id', async (req,res)=>{
-  const {level,sucursalId,updatedBy}=req.body;  
+  const {registrationValue,monthlyPayment,updatedBy}=req.body;
+  console.log(req.params.id,registrationValue,monthlyPayment)  
   Frequency.update(
-      {level,sucursalId,updatedBy},
-      {fields: ['level','sucursalId','updatedBy']},
-      { where: { id:req.params.id} }
+      {registrationValue,monthlyPayment,updatedBy},
+      { where: { id:req.params.id} },
+      {fields: ['registrationValue','monthlyPayment','updatedBy']},
+      
     )
       .then(result =>
           res.send(result)

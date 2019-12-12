@@ -13,7 +13,7 @@ const Payment = sequelize.define('Payment', {
   paymentDate:{type:Sequelize.DATE},
   code:{type:Sequelize.STRING},
   paymentMethod:{type:Sequelize.STRING},
-  hasFine:{type:Sequelize.BOOLEAN,defaultValue:true},
+  hasFine:{type:Sequelize.BOOLEAN,defaultValue:false},
   sucursalId: {
     type: Sequelize.INTEGER,
     field: 'sucursal_id',
@@ -53,9 +53,9 @@ const Payment = sequelize.define('Payment', {
   defaultScope: {
     where: {
       active: true
-    }
+    },  
+      },
     
-  },
 });
 
 module.exports = Payment;

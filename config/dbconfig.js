@@ -9,4 +9,5 @@ sequelize.sync({ force: false })
   .then(() => {
     console.log(`Database & tables created!`)
   })
+
   module.exports = sequelize;
