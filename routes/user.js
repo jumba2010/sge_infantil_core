@@ -2,26 +2,42 @@ const bcrypt=require('bcrypt');
 const _ = require('lodash');
 const express=require('express');
 const User=require('../models/user');
+const Profile=require('../models/profile');
+const Sucursal=require('../models/sucursal');
+const UserSucursal=require('../models/usersucursal');
+const Transaction=require('../models/transaction');
+const ProfileTransaction=require('../models/profiletransaction');
 const router=express.Router();
 
 //Cria Utilizador
 router.post('/', async (req,res)=>{   
-    const {username, password,activatedby,createdby}=req.body;
+    const {name,email,contact,address,picture,profileId,sucursals,transactions,username, password,activatedBy,createdBy}=req.body;
     const salt=await bcrypt.genSalt(10);
     let newpassword=await bcrypt.hash(password,salt);
-      User.create({ username: username, password: newpassword,activatedby,createdby}).then(function(user) {
+      User.create({name,email,contact,address,picture,profileId,username, password: newpassword,activatedBy,createdBy}).then(function(user) {
+      
+        //Criando as transacções do user
+        for (let index = 0; index < transactions.length; index++) {
+          ProfileTransaction.create({transactionId:transactions[index].id,profileId:profileId,activatedBy,createdBy});
+        } 
+        
+        //Criando as sucursais do user
+         for (let index = 0; index < sucursals.length; index++) {
+          UserSucursal.create({sucursalId:sucursals[index].id,userId:user.id,activatedBy,createdBy});
+        } 
+        
         res.send(_.pick(user,['id','username','active']));
       })   
 });
 
-router.put('/password', async (req,res)=>{   
-    var {username, password,updatedBy}=req.body;
+router.put('/password/:id', async (req,res)=>{   
+    var {password,updatedBy}=req.body;
     const salt=await bcrypt.genSalt(10);
     password= await bcrypt.hash(password,salt);
     User.update(
-        { password: password,updatedBy },
-        {fields: ['password','updatedBy']},
-        { where: { username:username,active:true } }
+        { password,updatedBy },
+        { where: { id:req.params.id,active:true } },
+        {fields: ['password','updatedBy']},       
       )
         .then(result =>
             res.send(result)
@@ -29,8 +45,137 @@ router.put('/password', async (req,res)=>{
         .catch(err =>
           console.log(err)
         )    
-   
 });
 
+router.put('/inactivate/:id', async (req,res)=>{   
+  var {updatedBy}=req.body;
+  User.update(
+      { active:false,updatedBy },
+      { where: { id:req.params.id,active:true } },
+      {fields: ['active','updatedBy']},       
+    )
+      .then(result =>
+          res.send(result)
+      )
+      .catch(err =>
+        console.log(err)
+      )    
+ 
+});
+
+router.put('/activate/:id', async (req,res)=>{   
+  var {updatedBy}=req.body;
+  User.update(
+      { active:true,updatedBy },
+      { where: { id:req.params.id,active:false } },
+      {fields: ['active','updatedBy']},       
+    )
+      .then(result =>
+          res.send(result)
+      )
+      .catch(err =>
+        console.log(err)
+      )  
+ 
+});
+
+router.put('/:id', async (req,res)=>{   
+  var {name,email,contact,address,picture,profileid,updatedBy}=req.body; 
+  User.update(
+      { name,email,contact,address,picture,profileid,updatedBy },
+      { where: { id:req.params.id,active:true } },
+      {fields: ['name','email','contact','address','picture','profileid','updatedBy']},     
+    )
+      .then(result =>
+          res.send(result)
+      )
+      .catch(err =>
+        console.log(err)
+      );        
+
+});
+
+
+router.get('/all/sucursal', async (req,res)=>{
+  var {sucursals}=req.body; 
+  User.findAll({raw: true,where:{sucursalId:sucursals}, }).then(async function(users) {
+       var newList=[]
+        for (let index = 0; index < users.length; index++) {
+          const element = users[index];
+
+        //Busca o Perfil do User
+         let profile=await  Profile.findOne({raw: true,where:{id:users[index].profileId}
+         });  
+
+        //Busca as transações do user
+        var transactions=[]
+         let profileTransactions=await  ProfileTransaction.findAll({raw: true,where:{profileId:users[index].profileId}
+         });    
+        for (let index = 0; index < profileTransactions.length; index++) {
+                   let transaction=await  Transaction.findOne({raw: true,where:{id:profileTransactions[index].transactionId}
+          });
+          transactions.push(transaction)          
+         }
+
+        //Busca as sucursais do user
+        var sucursals=[]
+        let userSucursals=await  UserSucursal.findAll({raw: true,where:{userId:users[index].id}
+        });    
+       for (let index = 0; index < userSucursals.length; index++) {
+                  let sucursal=await  Sucursal.findOne({raw: true,where:{id:userSucursals[index].sucursalId}
+         });
+         sucursals.push(sucursal)          
+        }
+         
+         element.profile=profile;
+         element.sucursals=sucursals;
+         element.transactions=transactions;
+        newList.push(element)   
+         
+        }   
+         res.send(newList);
+     
+      });          
+  
+    });
+
+
+    router.get('/unique', async (req,res)=>{
+      var {username}=req.body; 
+      User.findOne({raw: true,where:{username:username}, }).then(async function(user) {
+          
+        //Busca o Perfil do User
+             let profile=await  Profile.findOne({raw: true,where:{id:users[index].profileId}
+             });  
+    
+            //Busca as transações do user
+            var transactions=[]
+             let profileTransactions=await  ProfileTransaction.findAll({raw: true,where:{profileId:users[index].profileId}
+             });    
+            for (let index = 0; index < profileTransactions.length; index++) {
+                       let transaction=await  Transaction.findOne({raw: true,where:{id:profileTransactions[index].transactionId}
+              });
+              transactions.push(transaction)          
+             }
+    
+            //Busca as sucursais do user
+            var sucursals=[]
+            let userSucursals=await  UserSucursal.findAll({raw: true,where:{userId:users[index].id}
+            });    
+           for (let index = 0; index < userSucursals.length; index++) {
+                      let sucursal=await  Sucursal.findOne({raw: true,where:{id:userSucursals[index].sucursalId}
+             });
+             sucursals.push(sucursal)          
+            }
+             
+            user.profile=profile;
+            user.sucursals=sucursals;
+            user.transactions=transactions;
+             res.send(user);
+         
+          });          
+      
+        });
+    
 
 module.exports=router;

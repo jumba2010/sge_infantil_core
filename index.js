@@ -11,6 +11,7 @@ const payment = require('./routes/payment');
 const sucursal = require('./routes/sucursal');
 const registration = require('./routes/registration');
 const frequency = require('./routes/frequency');
+const smsntification = require('./routes/api/smsnotification');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -35,6 +36,7 @@ app.use('/api/profile', profile);
 app.use('/api/payment', payment);
 app.use('/api/sucursal', sucursal);
 app.use('/api/registration', registration);
+app.use('/api/smsntification', smsntification);
 app.use('/api/frequency', frequency);
 
 app.use('/public/files', express.static(__dirname + '/public/files'));

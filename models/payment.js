@@ -14,6 +14,7 @@ const Payment = sequelize.define('Payment', {
   code:{type:Sequelize.STRING},
   paymentMethod:{type:Sequelize.STRING},
   hasFine:{type:Sequelize.BOOLEAN,defaultValue:false},
+  sentNotifications:{type:Sequelize.INTEGER,defaultValue:0},
   sucursalId: {
     type: Sequelize.INTEGER,
     field: 'sucursal_id',
