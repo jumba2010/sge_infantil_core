@@ -9,9 +9,9 @@ const Carier = require('../../models/carier');
 var http = require("https");
 const keys = require('./../../config/keys');
 
-
+const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 //Task que corre 5 em 5 minutos
-var task = cron.schedule('*/50 * * * *', async () => {
+var task = cron.schedule('*/1 * * * *', async () => {
 
     console.log('Iniciando a task de caculo de multa e notificações');
     //Busca todas configuracoes de Mensagens
@@ -41,7 +41,10 @@ var task = cron.schedule('*/50 * * * *', async () => {
                 });
 
                 console.log('Enviando notificação para ' + carier.contact)
-                // await sendNotification('258' + carier.contact, 'teste', conf.smsSenderID);
+                let currentMonth=months[payment.month-1];
+                let nextMonth=months[payment.month];
+                let endDay=conf.paymentEndDay;
+                 await sendNotification('258' + carier.contact, `Caro%20Encarregado%2C%20vimos%20por%20meio%20deste%20informar%20que%20o%20pagamento%20da%20mensalidade%20referente%20ao%20mes%20de%20${currentMonth}%2C%20j%C3%A1%20est%C3%A1%20em%20cobran%C3%A7a%20a%20partir%20de%20hoje%20at%C3%A9%20o%20dia%20${endDay}%20de%20${nextMonth}.%20Fa%C3%A7a%20j%C3%A1%20o%20seu%20Pagamento.%20Evite%20Multas.%20%20Obrigado`, conf.smsSenderID);
 
                 await Payment.update(
                     { sentNotifications: 1, updatedBy: 1 },
@@ -71,7 +74,7 @@ var task = cron.schedule('*/50 * * * *', async () => {
             });
 
             console.log('Enviando notificação para ' + carier.contact)
-            //    await sendNotification('258' + carier.contact, 'Teste2', conf.smsSenderID);
+            await sendNotification('258' + carier.contact, `Caro%20Encarregado%2C%20vimos%20por%20meio%20deste%20informar%20que%20o%20pagamento%20da%20mensalidade%20referente%20ao%20mes%20de%20${currentMonth}%2C%20est%C3%A1%20a%20dois%20dias%20do%20prazo.%20Fa%C3%A7a%20j%C3%A1%20o%20seu%20Pagamento.%20Evite%20Multas.%20%20Obrigado`, conf.smsSenderID);
 
             await Payment.update(
                 { sentNotifications: 2, updatedBy: 1 },
@@ -119,6 +122,8 @@ var task = cron.schedule('*/50 * * * *', async () => {
 task.start();
 
 function sendNotification(cellphone, message, senderId) {
+    let path= `/api/sendhttp.php?mobiles=${cellphone}&authkey=${keys.msg91AuthKey}&route=4&sender=${senderId}&message=${message}`;
+  console.log('Path: ',path);
     var options = {
         "method": "GET",
         "hostname": "world.msg91.com",

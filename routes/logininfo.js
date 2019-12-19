@@ -13,7 +13,7 @@ router.post('/', async (req,res)=>{
 
 //Actualiza duracao
 router.put('/:id', async (req,res)=>{
-  const {month,year,total,fine,discount,status,registrationId,updatedBy}=req.body;  
+  const {duration}=req.body;  
   LoginInfo.update(
       {duration},  
       { where: { id:req.params.id} },    

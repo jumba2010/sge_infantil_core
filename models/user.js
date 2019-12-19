@@ -3,13 +3,13 @@ const sequelize = require('../config/dbconfig');
 const Profile=require('./profile');
 const User = sequelize.define('user', {
   name: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,notEmpty: true}},
-  email: {type:Sequelize.STRING, validate: {email:true}},
+  email: {type:Sequelize.STRING, },
   contact: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   address: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   picture:Sequelize.STRING,
   username: {type:Sequelize.STRING, allowNull:false,validate: {notNull: true,notEmpty: true}},
   password: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,max:8,min:6,notEmpty: true}},
-  profileid: {
+  profileId: {
     type: Sequelize.INTEGER,
     field: 'profile_id',
     references: {
