@@ -4,17 +4,17 @@ const Payment=require('../models/payment');
 const router=express.Router();
  
 router.post('/', async (req,res)=>{
-    const {name,address,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}=req.body; 
-    Student.create({name,address,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}).then(function(student) {
+    const {name,sex,alergicToFood,alergicToMedicine,wasTransfered,oldSchool,address,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}=req.body; 
+    Student.create({name,address,alergicToFood,wasTransfered,oldSchool,alergicToMedicine,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}).then(function(student) {
         res.send(student);
       })
 });
 
 router.put('/:id', async (req,res)=>{
-  const {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,currentMonthlyPayment,level,updatedBy}=req.body;  
+  const {name,alergicToFood,alergicToMedicine,wasTransfered,oldSchool,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,currentMonthlyPayment,level,updatedBy}=req.body;  
   Student.update(
-      {name,address,sex,birthDate,docType,docNumber,studentNumber,motherName,currentMonthlyPayment,level,fatherName,picture,updatedBy},
-      {fields: ['name','address','sex','birthDate','docType','docNumber','currentMonthlyPayment','level','studentNumber','motherName','fatherName','updatedBy','picture']},
+      {name,alergicToFood,alergicToMedicine,wasTransfered,oldSchool,address,sex,birthDate,docType,docNumber,studentNumber,motherName,currentMonthlyPayment,level,fatherName,picture,updatedBy},
+      {fields: ['alergicToMedicine','wasTransfered','oldSchool','alergicToFood','sex','name','address','birthDate','docType','docNumber','currentMonthlyPayment','level','studentNumber','motherName','fatherName','updatedBy','picture']},
       { where: { id:req.params.id} }
     )
       .then(result =>

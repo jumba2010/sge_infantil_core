@@ -26,6 +26,11 @@ const Student = sequelize.define('Student', {
     },allowNull:false,
     validate: {notNull: true}
   },
+  alergicToFood:{type:Sequelize.STRING,allowNull:false,defaultValue:'', validate: {notNull: true}},
+  alergicToMedicine:{type:Sequelize.STRING,allowNull:false,defaultValue:'', validate: {notNull: true}},  
+  address:{type:Sequelize.STRING,allowNull:false,defaultValue:'', validate: {notNull: true}}, 
+  wasTransfered:{type:Sequelize.BOOLEAN,allowNull:false,defaultValue:false, validate: {notNull: true}},   
+  oldSchool:{type:Sequelize.STRING,allowNull:false,defaultValue:'', validate: {notNull: true}}, 
   active:{type:Sequelize.BOOLEAN,defaultValue:true,allowNull:false, validate: {notNull: true}},
   createdBy:{type:Sequelize.INTEGER,  field: 'created_by',allowNull:false,validate: {notNull: true}},
   updatedBy:{type:Sequelize.INTEGER,  field: 'updated_by'},

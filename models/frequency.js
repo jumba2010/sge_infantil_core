@@ -4,6 +4,8 @@ const Sucursal=require('./sucursal');
 const Frequency = sequelize.define('Frequency', {
   level: {type:Sequelize.INTEGER,allowNull:false, validate: {notNull: true}},
   description: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
+  specialHourMonthlyValue: {type:Sequelize.DOUBLE(14,4), allowNull:false,validate: {notNull: true, isDecimal: true }},
+  recurigRegistrationValue: {type:Sequelize.DOUBLE(14,4), allowNull:false,validate: {notNull: true, isDecimal: true }},
   registrationValue: {type:Sequelize.DOUBLE(14,4), allowNull:false,validate: {notNull: true, isDecimal: true }},
   monthlyPayment: {type:Sequelize.DOUBLE(14,4), allowNull:false,validate: {notNull: true, isDecimal: true }},
   sucursalId: {

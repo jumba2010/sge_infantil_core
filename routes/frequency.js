@@ -12,12 +12,12 @@ router.post('/', async (req,res)=>{
 
 //Actualiza Taxa
 router.put('/:id', async (req,res)=>{
-  const {registrationValue,monthlyPayment,updatedBy}=req.body;
-  console.log(req.params.id,registrationValue,monthlyPayment)  
+  const {registrationValue,monthlyPayment,specialHourMonthlyValue,recurigRegistrationValue,updatedBy}=req.body;
+ 
   Frequency.update(
-      {registrationValue,monthlyPayment,updatedBy},
+      {registrationValue,monthlyPayment,specialHourMonthlyValue,recurigRegistrationValue,updatedBy},
       { where: { id:req.params.id} },
-      {fields: ['registrationValue','monthlyPayment','updatedBy']},
+      {fields: ['specialHourMonthlyValue','recurigRegistrationValue','registrationValue','monthlyPayment','updatedBy']},
       
     )
       .then(result =>

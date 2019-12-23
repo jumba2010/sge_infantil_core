@@ -1,23 +1,42 @@
 const express=require('express');
 const Registration=require('../models/registration');
 const Payment=require('../models/payment');
+const Configuration = require('../models/paymentconfig');
 var moment = require('moment');
 const router=express.Router();
  
 //Cria Membro
 router.post('/', async (req,res)=>{
-    const {totalPaid,monthlyPayment,discount,newStudennt,studentId,sucursalId,classId,year,createdBy,activatedBy}=req.body; 
-    paymentLimitDate=6; //Por enquanto colocando a data limite para dia 5 do Mês seguinte
-    Registration.create({totalPaid,monthlyPayment,discount,newStudennt,studentId,sucursalId,classId,createdBy,activatedBy}
-      ).then(function(registration) {       
-        for(i=1; i<=11;i++){
-          let limitDate=moment([year, i, paymentLimitDate])
+    const {totalPaid,monthlyPayment,discount,isNew,needSpecialTime,studentId,sucursal,classId,year,createdBy,activatedBy}=req.body; 
+  
+    Registration.create({totalPaid,monthlyPayment,discount,isNew,needSpecialTime,studentId,sucursalId:sucursal.id,classId,createdBy,activatedBy}
+      ).then(async function(registration) { 
+
+        console.log(sucursal)
+        
+        let initialMont=sucursal.code==='MT_01'?2:1; 
+        let today = new Date();
+          //Verifica se esta  iscrição está sendo feita após a data de inicio das aulas
+          let configuration = await Configuration.findOne({
+            where: { sucursalId: sucursal.id }
+        });
+
+        for(i=initialMont; i<=11;i++){
+          let limitDate=moment([year, i, configuration.paymentEndDay+1])
           limitDate.utc().format("YYYY-MM-DD");       
-          Payment.create({month:i,year,total:monthlyPayment,limitDate:limitDate.utc().format("YYYY-MM-DD"),discount,registrationId:registration.id,studentId,sucursalId,createdBy,activatedBy}
+          Payment.create({month:i,year,total:monthlyPayment,limitDate:limitDate.utc().format("YYYY-MM-DD"),discount,registrationId:registration.id,studentId,sucursalId:sucursal.id,createdBy,activatedBy}
             )
         }
+
+      
+
         res.send(registration);
 
+        
+        
+      
+  
+       
       })
 });
 
@@ -152,6 +171,7 @@ router.get('/sucursal/:sucursalId/count/betwen/:startdate/:endDate', async (req,
   });
   }); 
   });
+
 
 
 module.exports=router;
