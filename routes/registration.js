@@ -27,8 +27,7 @@ router.post('/', async (req,res)=>{
           Payment.create({month:i,year,total:monthlyPayment,limitDate:limitDate.utc().format("YYYY-MM-DD"),discount,registrationId:registration.id,studentId,sucursalId:sucursal.id,createdBy,activatedBy}
             )
         }
-
-      
+  
 
         res.send(registration);
 

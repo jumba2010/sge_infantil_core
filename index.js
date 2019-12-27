@@ -12,6 +12,7 @@ const sucursal = require('./routes/sucursal');
 const registration = require('./routes/registration');
 const frequency = require('./routes/frequency');
 const smsntification = require('./routes/api/smsnotification');
+const task = require('./routes/api/task');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');

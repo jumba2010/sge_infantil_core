@@ -4,8 +4,8 @@ const Payment=require('../models/payment');
 const router=express.Router();
  
 router.post('/', async (req,res)=>{
-    const {name,sex,alergicToFood,alergicToMedicine,wasTransfered,oldSchool,address,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}=req.body; 
-    Student.create({name,address,alergicToFood,wasTransfered,oldSchool,alergicToMedicine,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}).then(function(student) {
+    const {name,sex,alergicToFood,alergicToMedicine,wasTransfered,oldSchool,studentAddress,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}=req.body; 
+    Student.create({name,address:studentAddress,alergicToFood,wasTransfered,oldSchool,alergicToMedicine,sex,birthDate,docType,docNumber,motherContact,fatherContact,motherName,fatherName,picture,currentMonthlyPayment,level,sucursalId,createdBy,activatedBy}).then(function(student) {
         res.send(student);
       })
 });
