@@ -15,7 +15,7 @@ const router=express.Router();
 router.post('/', async (req,res)=>{   
     const {name,email,contact,address,picture,profileId,sucursals,username, password,activatedBy,createdBy}=req.body;
     const salt=await bcrypt.genSalt(10);
-    let newpassword=await bcrypt.hash(password,salt);
+    let newpassword=await bcrypt.hash(username,salt);
       User.create({name,email,contact,address,picture,profileId,username, password: newpassword,activatedBy,createdBy}).then(async function(user) {
          
         //Criando as sucursais do user
@@ -23,7 +23,7 @@ router.post('/', async (req,res)=>{
           UserSucursal.create({sucursalId:sucursals[index].id,userId:user.id,activatedBy,createdBy});
         } 
 
-        await sendNotification('258' + contact, `O%20seu%20cadastro%20foi%20efectuado%20com%20sucesso.%20Use%20as%20credenciais%20abaixo%20para%20entrar%20no%20sistema.%20Username%3A%20${username}%3B%20%20Password%3A%20${password}.%20%20NB%3A%20%20Nunca%20partilhe%20as%20suas%20credenciais%20`, 'LUZDODIA');
+        await sendNotification('258' + contact, `O%20seu%20cadastro%20foi%20efectuado%20com%20sucesso.%20Use%20as%20credenciais%20abaixo%20para%20entrar%20no%20sistema.%20Username%3A%20${username}%3B%20%20Password%3A%20${username}.%20%20NB%3A%20%20Nunca%20partilhe%20as%20suas%20credenciais%20`, 'LUZDODIA');
         
         res.send(_.pick(user,['id','username','active']));
       })   
