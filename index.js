@@ -9,10 +9,12 @@ const carier = require('./routes/carier');
 const profile = require('./routes/profile');
 const payment = require('./routes/payment');
 const sucursal = require('./routes/sucursal');
+const path = require('path');
 const registration = require('./routes/registration');
 const frequency = require('./routes/frequency');
 const smsntification = require('./routes/api/smsnotification');
 const task = require('./routes/api/task');
+const logininfo = require('./routes/logininfo');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -39,6 +41,7 @@ app.use('/api/sucursal', sucursal);
 app.use('/api/registration', registration);
 app.use('/api/smsntification', smsntification);
 app.use('/api/frequency', frequency);
+app.use('/api/logininfo', logininfo);
 
 app.use('/public/files', express.static(__dirname + '/public/files'));
 app.use(express.static(__dirname + '/public'));
@@ -98,6 +101,14 @@ app.use(function (err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'jade')
+
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 

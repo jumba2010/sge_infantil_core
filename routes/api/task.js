@@ -11,7 +11,7 @@ const keys = require('../../config/keys');
 
 const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 //Task que corre 5 em 5 minutos
-var task = cron.schedule('*/55 * * * * *', async () => {
+var task = cron.schedule('*/50 * * * *', async () => {
 
     console.log('Iniciando a task de caculo de multa e notificações');
     //Busca todas configuracoes de Mensagens

@@ -4,11 +4,10 @@ const router=express.Router();
  
 //Cria Membro
 router.post('/', async (req,res)=>{
-    const {ipaddress,macaddress,location,device,userId}=req.body; 
-    LoginInfo.create({ipaddress,macaddress,location,device,userId}
-      ).then(function(logininfo) {
-        res.send(logininfo);
-      })
+  const {ipaddress,userAgent,location,userId}=req.body; 
+  await LoginInfo.create({ipaddress,userAgent,location,userId,createdBy:1,activatedBy:1}).then(async function(logininfo) {       
+    res.send(logininfo);           
+            }); 
 });
 
 //Actualiza duracao
@@ -29,13 +28,11 @@ router.put('/:id', async (req,res)=>{
 });
  
 router.get('/:userId', async (req,res)=>{         
- LoginInfo.findAll({raw: true,where:{userId:req.params.userId}, order: [
+ LoginInfo.findAll({where:{userId:req.params.userId}, order: [
           ['loginDate', 'DESC']
-      ],}).then(async function(logininfo) {       
-    res.send(logininfo);
-           
+      ],}).then(async function(logininfos) {       
+    res.send(logininfos);           
             }); 
     });
-
 
 module.exports=router;

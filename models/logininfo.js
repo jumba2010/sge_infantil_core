@@ -2,12 +2,12 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const User = require('./user');
 const LoginInfo = sequelize.define('LoginInfo', {
-  ipaddress: {type:Sequelize.STRING,allowNull:false,validate: {notNull: true}},
+  ipaddress: {type:Sequelize.STRING},
   macaddress: {type:Sequelize.STRING},
   location: {type:Sequelize.STRING},
   duration: {type:Sequelize.INTEGER},
-  device:{type:Sequelize.INTEGER},
-  userId: {
+  userAgent:{type:Sequelize.STRING},
+    userId: {
     type: Sequelize.INTEGER,
     field: 'user_id',
     references: {
