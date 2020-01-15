@@ -47,10 +47,7 @@ const Registration = sequelize.define('Registration', {
     where: {
       active: true
     }
-    ,
-    include: [
-      { model: Student, where: { active: true }}
-    ]
+    
   },
 });
 

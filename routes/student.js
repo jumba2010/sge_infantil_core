@@ -1,6 +1,8 @@
 const express=require('express');
 const Student=require('../models/student');
 const Payment=require('../models/payment');
+const Registration=require('../models/registration');
+const Carier=require('../models/carier');
 const router=express.Router();
  
 router.post('/', async (req,res)=>{
@@ -11,32 +13,80 @@ router.post('/', async (req,res)=>{
 });
 
 router.put('/:id', async (req,res)=>{
-  const {name,alergicToFood,alergicToMedicine,wasTransfered,oldSchool,address,sex,birthDate,docType,docNumber,studentNumber,motherName,fatherName,picture,currentMonthlyPayment,level,updatedBy}=req.body;  
-  Student.update(
-      {name,alergicToFood,alergicToMedicine,wasTransfered,oldSchool,address,sex,birthDate,docType,docNumber,studentNumber,motherName,currentMonthlyPayment,level,fatherName,picture,updatedBy},
-      {fields: ['alergicToMedicine','wasTransfered','oldSchool','alergicToFood','sex','name','address','birthDate','docType','docNumber','currentMonthlyPayment','level','studentNumber','motherName','fatherName','updatedBy','picture']},
-      { where: { id:req.params.id} }
-    )
-      .then(result =>
-          res.send(result)
-      )
-      .catch(err =>
-        console.log(err)
-      )    
+  const {name,alergicToFood,alergicToMedicine,
+    registrationId,oldSchool,address,sex,
+    birthDate,docType,docNumber,studentNumber,
+    motherName,fatherName,picture,
+    motherContact,fatherContact,
+    totalPaid,monthlyPayment,payments,
+    carierName,kinshipDegree,contact,carierDocType,carierDocNumber,workPlace,
+    discount,isNew,needSpecialTime,classId,
+    currentMonthlyPayment,level,updatedBy}=req.body;
+
+ await  Student.update(
+      {name,alergicToFood,fatherContact,motherContact,alergicToMedicine,oldSchool,address,sex,birthDate,docType,docNumber,studentNumber,motherName,currentMonthlyPayment,level,fatherName,picture,updatedBy},
+      { where: { id:req.params.id} },
+      {fields: ['alergicToMedicine','oldSchool','alergicToFood','sex','name','address','birthDate','docType','docNumber','currentMonthlyPayment','level','studentNumber','motherName','fatherName','updatedBy','picture']},
+     
+    );
+
+    //Actualizada Dados do Encarregado
+  await  Carier.update(
+      {name:carierName,kinshipDegree,contact,docType:carierDocType,docNumber:carierDocNumber,workPlace,updatedBy}, 
+      { where: { id:req.params.id} },     
+       {fields: ['name','kinshipDegree','contact','docType','docNumber','workPlace','updatedBy']},      
+    );
+
+    //Actualiza Dados da Inscrição
+    await Registration.update(
+          {totalPaid,monthlyPayment,discount,isNew,needSpecialTime,classId,updatedBy},  
+          { where: { id:registrationId} },    
+           {fields: ['totalPaid','monthlyPayment','isNew','needSpecialTime','discount','classId','updatedBy']});
+        
+      //Actualiza os Pagamentos
+      for(let i = 0; i < payments.length; i++){
+      await  Payment.update(
+          {total:monthlyPayment,discount,updatedBy},
+          { where: { id:payments[i].id} },
+          {fields: ['total','discount','updatedBy']},         
+        );
+      }
 });
 
 router.put('/inativate/:id', async (req,res)=>{
-  Student.update(
+const {payments,registrationId,carierId,activatedBy}=req.body; 
+
+//Inativa o Estudante
+ await  Student.update(
         { active:false,activationDate:Date.now(),activatedBy},
+        { where: { id:req.params.id} },
         {fields: ['active','activationDate','activatedBy']},
-        { where: { id:req.params.id} }
-      )
-        .then(result =>
-            res.send(result)
-        )
-        .catch(err =>
-          console.log(err)
-        )    
+        
+      );
+      
+  //Inativa a inscrição
+  await  Registration.update(
+    { active:false,activationDate:Date.now(),activatedBy},
+    { where: { id:registrationId} },
+    {fields: ['active','activationDate','activatedBy']},   
+    );
+
+    //Inativa o encarregado
+    await  Carier.update(
+        { active:false,activationDate:Date.now(),activatedBy},
+        { where: { id:carierId} },
+        {fields: ['active','activationDate','activatedBy']},        
+      );
+
+      //Inativa os Pagaments
+      for(let i = 0; i < payments.length; i++){
+        Payment.update(
+          {active:false,activationDate:Date.now(),activatedBy},
+          { where: { id:payments[i].id} },
+          {fields: ['active','activationDate','activatedBy']},
+         
+        );
+      }
 });
 
 router.get('/:page', async (req,res)=>{
@@ -52,10 +102,19 @@ Student.findAll({raw: true,where:{ sucursalId:req.params.sucursalId} }).then( as
   var newList=[]
   for (let index = 0; index < students.length; index++) {
     const element = students[index];
-   let payments=await Payment.findAll({ raw: true,where:{studentId:element.id}, order: [
-       ['month', 'ASC'],
+   let registrations=await Registration.findAll({ raw: true,where:{studentId:element.id}, order: [
+       ['createdAt', 'ASC'],
 ], });
+
+let payments=await Payment.findAll({ raw: true,where:{studentId:element.id}, order: [
+  ['createdAt', 'ASC'],
+], });
+
+
+let carier=await Carier.findOne({where:{studentId:element.id}});
     element.payments=payments;
+    element.carier=carier;
+    element.registration=registrations[0];
     newList.push(element)
    
   }

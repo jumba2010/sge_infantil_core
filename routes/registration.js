@@ -12,7 +12,6 @@ router.post('/', async (req,res)=>{
     Registration.create({totalPaid,monthlyPayment,discount,isNew,needSpecialTime,studentId,sucursalId:sucursal.id,classId,createdBy,activatedBy}
       ).then(async function(registration) { 
 
-        console.log(sucursal)
         
         let initialMont=sucursal.code==='MT_01'?2:1; 
         let today = new Date();
