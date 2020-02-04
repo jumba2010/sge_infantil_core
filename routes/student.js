@@ -14,6 +14,7 @@ router.post('/', async (req,res)=>{
 
 router.put('/:id', async (req,res)=>{
   const {name,alergicToFood,alergicToMedicine,
+    carierId,
     registrationId,oldSchool,address,sex,
     birthDate,docType,docNumber,studentNumber,
     motherName,fatherName,picture,
@@ -33,7 +34,7 @@ router.put('/:id', async (req,res)=>{
     //Actualizada Dados do Encarregado
   await  Carier.update(
       {name:carierName,kinshipDegree,contact,docType:carierDocType,docNumber:carierDocNumber,workPlace,updatedBy}, 
-      { where: { id:req.params.id} },     
+      { where: { id:carierId} },     
        {fields: ['name','kinshipDegree','contact','docType','docNumber','workPlace','updatedBy']},      
     );
 
@@ -97,13 +98,15 @@ router.get('/:page', async (req,res)=>{
 });
 
 router.get('/sucursal/:sucursalId', async (req,res)=>{
-Student.findAll({raw: true,where:{ sucursalId:req.params.sucursalId} }).then( async function(students) {
+Student.findAll({raw: true,where:{ sucursalId:req.params.sucursalId} , order: [
+  ['createdAt', 'DESC'],
+], }).then( async function(students) {
 
   var newList=[]
   for (let index = 0; index < students.length; index++) {
     const element = students[index];
    let registrations=await Registration.findAll({ raw: true,where:{studentId:element.id}, order: [
-       ['createdAt', 'ASC'],
+       ['createdAt', 'DESC'],
 ], });
 
 let payments=await Payment.findAll({ raw: true,where:{studentId:element.id}, order: [

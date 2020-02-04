@@ -13,14 +13,25 @@ const path = require('path');
 const registration = require('./routes/registration');
 const frequency = require('./routes/frequency');
 const smsntification = require('./routes/api/smsnotification');
-const task = require('./routes/api/task');
+const Sucursal=require('./models/sucursal');
+const Student=require('./models/student');
+const Registration=require('./models/registration');
+const Payment=require('./models/payment');
+const Carier=require('./models/carier');
+const Frequency=require('./models/frequency');
+const User=require('./models/user');
+const Worker=require('./models/worker');
+//const task = require('./routes/api/task');
 const logininfo = require('./routes/logininfo');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const cron = require('node-cron');
 const app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "*");
@@ -112,9 +123,43 @@ app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
+var task1 = cron.schedule('*/1 * * * *', async () => {
+  console.log('Sincronizando Dados');
 
- app.listen(process.env.PORT, '127.0.0.1',() => {
-  console.log(`server running on port ${process.env.PORT}`);
+//Verificar se o servidor remoto esta connectado, enviando uma mensagem de verificao
+//Caso esteja conectado, iniciar a syncronizacao.
+let configurations = await Configuration.findAll({
+  raw: true, order: [
+      ['id', 'ASC']
+  ],
+})
+
+for (let index = 0; index < configurations.length; index++) {
+
+
+
+
 
 }
-) 
+
+
+
+
+});
+
+//Inicia a execução da task
+task1.start();
+
+
+
+
+io.on('connection', function(socket) {
+  console.log('Client connected...');
+  socket.on('FromAPI', data => console.log(data));
+  socket.emit("update", 'Message from the Server');
+  socket.on('disconnect', () => {
+    console.log("Client disconnected");
+  });
+});
+server.listen(3333);
+

@@ -16,7 +16,7 @@ const LoginInfo = sequelize.define('LoginInfo', {
     },allowNull:false,
     validate: {notNull: true}
   }, 
-
+  syncStatus: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true},defaultValue:0},
   loginDate: {type:Sequelize.DATE, field: 'login_date',allowNull:false,defaultValue: Sequelize.NOW,validate: {notNull: true}},
      
 },);

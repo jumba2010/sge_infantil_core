@@ -1,4 +1,4 @@
-const bcrypt=require('bcrypt');
+const bcrypt = require('bcryptjs');
 const _ = require('lodash');
 const express=require('express');
 const User=require('../models/user');
@@ -14,8 +14,8 @@ const router=express.Router();
 //Cria Utilizador
 router.post('/', async (req,res)=>{   
     const {name,email,contact,address,picture,profileId,sucursals,username, password,activatedBy,createdBy}=req.body;
-    const salt=await bcrypt.genSalt(10);
-    let newpassword=await bcrypt.hash(username,salt);
+    const salt=await bcrypt.genSaltSync(10);
+    let newpassword=await bcrypt.hashSync(username,salt);
       User.create({name,email,contact,address,picture,profileId,username, password: newpassword,activatedBy,createdBy}).then(async function(user) {
          
         //Criando as sucursais do user

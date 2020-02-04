@@ -1,18 +1,17 @@
 var fs = require('fs');
 const express = require('express');
 const router = express.Router();
+
 const cron = require('node-cron');
 const Configuration = require('../../models/paymentconfig');
 const Payment = require('../../models/payment');
 var moment = require('moment');
 const Carier = require('../../models/carier');
-var http = require("https");
+var https = require("https");
 const keys = require('../../config/keys');
-
 const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 //Task que corre 5 em 5 minutos
-var task = cron.schedule('*/50 * * * *', async () => {
-
+var task = cron.schedule('*/1 * * * *', async () => {
     console.log('Iniciando a task de caculo de multa e notificações');
     //Busca todas configuracoes de Mensagens
     let configurations = await Configuration.findAll({
@@ -30,8 +29,8 @@ var task = cron.schedule('*/50 * * * *', async () => {
 
         if (today.getDate() >= conf.paymentStartDay) {
             // 1. Buscar todos os Pagamentos cuja data de inicio eh igual a data actual
-            let payments = await Payment.findAll({ where: { month: today.getMonth()+1, year: today.getFullYear(), sucursalId: conf.sucursalId, sentNotifications: 0 } });
-            console.log(`Encontrou ${payments.length} pagamentos para o mês de ${today.getMonth()+1} do ano de ${today.getFullYear()} na sucural ${conf.sucursalId}`);
+            let payments = await Payment.findAll({ where: { month: today.getMonth()+2, year: today.getFullYear(), sucursalId: conf.sucursalId, sentNotifications: 0 } });
+            console.log(`Encontrou ${payments.length} pagamentos para o mês de ${today.getMonth()+2} do ano de ${today.getFullYear()} na sucural ${conf.sucursalId}`);
             for (let index = 0; index < payments.length; index++) {
                 const payment = payments[index];
                 //2. Para cada Pagamento enviar a primeira notificacao de Pagamento (depois sinalizar o pagamento como sendo notificado )
@@ -40,10 +39,13 @@ var task = cron.schedule('*/50 * * * *', async () => {
                 });
 
                 console.log('Enviando notificação para ' + carier.contact)
-                let currentMonth=months[payment.month-1];
-                let nextMonth=months[payment.month];
+                let nextMonth=months[payment.month-1];
                 let endDay=conf.paymentEndDay;
-                 await sendNotification('258' + carier.contact, `Caro%20Encarregado%2C%20vimos%20por%20meio%20deste%20informar%20que%20o%20pagamento%20da%20mensalidade%20referente%20ao%20mes%20de%20${currentMonth}%2C%20ja%20esta20em%20cobranca%20a%20partir%20de%20hoje%20at%C3%A9%20o%20dia%20${endDay}%20de%20${nextMonth}.%20Faca%20ja%20o%20seu%20Pagamento.%20Evite%20Multas.%20%20Obrigado`, conf.smsSenderID);
+
+              //  let stringfyedMessage=encodeURIComponent(`Caro Encarregado, vimos por meio deste informar que a mensalidade referente ao mes de ${nextMonth} ja esta em cobranca, ate ao dia ${endDay} de ${nextMonth}. Faca ja o seu pagamento. Evite multas. Obrigado. `);
+
+              //  await sendNotification('258' + carier.contact,stringfyedMessage , conf.smsSenderID);
+                 
 
                 await Payment.update(
                     { sentNotifications: 1, updatedBy: 1 },
@@ -73,9 +75,10 @@ var task = cron.schedule('*/50 * * * *', async () => {
             carier = await Carier.findOne({
                 where: { studentId: payment.studentId }
             });
-            let currentMonth=months[payment.month-1];
+            let currentMonth=months[payment.month];
             console.log('Enviando notificação para ' + carier.contact)
-            await sendNotification('258' + carier.contact, `Caro%20Encarregado%2C%20vimos%20por%20meio%20deste%20informar%20que%20o%20pagamento%20da%20mensalidade%20referente%20ao%20mes%20de%20${currentMonth}%2C%20esta%20a%20dois%20dias%20do%20prazo.%20Faca%20ja%20o%20seu%20Pagamento.%20Evite%20Multas.%20%20Obrigado`, conf.smsSenderID);
+           // let stringfyedMessage=encodeURIComponent(`Caro Encarregado, vimos por meio deste informar que a mensalidade referente ao mes de ${currentMonth} esta a dois dias do seu prazo. Faca ja o seu pagamento. Evite multas. Obrigado. `);
+            //await sendNotification('258' + carier.contact, stringfyedMessage, conf.smsSenderID);
 
             await Payment.update(
                 { sentNotifications: 2, updatedBy: 1 },
@@ -135,7 +138,7 @@ function sendNotification(cellphone, message, senderId) {
         "headers": {}
     };
 
-    var req = http.request(options, function (res) {
+    var req = https.request(options, function (res) {
         var chunks = [];
 
         res.on("data", function (chunk) {

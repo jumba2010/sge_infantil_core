@@ -17,6 +17,7 @@ const Frequency = sequelize.define('Frequency', {
     },allowNull:false,
     validate: {notNull: true}
   },
+  syncStatus: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true},defaultValue:0},
   active:{type:Sequelize.BOOLEAN,defaultValue:true,allowNull:false, validate: {notNull: true}},
   createdBy:{type:Sequelize.INTEGER,  field: 'created_by',allowNull:false,validate: {notNull: true}},
   updatedBy:{type:Sequelize.INTEGER,  field: 'updated_by'},
