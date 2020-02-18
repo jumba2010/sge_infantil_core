@@ -26,3 +26,35 @@ INSERT INTO `sge_infantil_db`.`transactions` (`code`, `description`, `active`, `
 INSERT INTO `sge_infantil_db`.`profiles` (`code`, `description`, `active`, `created_by`, `activated_by`, `activation_date`, `createdAt`, `updatedAt`) VALUES ('001', 'Funcionário(a)', '1', '1', '1', '2019-12-17 04:14:00', '2019-12-17 04:14:00', '2019-12-17 04:14:00');
 INSERT INTO `sge_infantil_db`.`profiles` (`code`, `description`, `active`, `created_by`, `activated_by`, `activation_date`, `createdAt`, `updatedAt`) VALUES ('002', 'Director(a)', '1', '1', '1', '2019-12-17 04:14:00', '2019-12-17 04:14:00', '2019-12-17 04:14:00');
 INSERT INTO `users` (`id`,`name`,`email`,`contact`,`address`,`picture`,`username`,`password`,`profile_id`,`active`,`created_by`,`updated_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (1,'Judiao Mbaua','','841143433','M. Gare','','admin','$2b$10$Bd744PH6uVopvcYycyf2k.DKp7AHF1Ow.RrwCFwZ41/LDBQxG9Oj2',2,1,1,NULL,1,'2019-12-23 01:33:13','2019-12-23 01:33:13','2019-12-23 01:33:13');
+
+ALTER TABLE Students
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+ALTER TABLE Users
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+ALTER TABLE Payments
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+ALTER TABLE Cariers
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+ALTER TABLE Registrations
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+ALTER TABLE LoginInfos
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+ALTER TABLE Frequencies
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+ALTER TABLE PaymentConfigs
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+ALTER TABLE Profiles
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+ALTER TABLE ProfileTransactions
+ADD COLUMN syncStatus INT NOT NULL default 0;
+
+Update sge_teste.Students set studentNumber=concat("2020001",lpad(""+id,5,"0"));

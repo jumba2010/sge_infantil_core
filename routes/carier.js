@@ -51,11 +51,20 @@ router.get('/:page', async (req,res)=>{
 });
 
 //Busca Todos os Membros
+router.get('/studentId/:studentId', async (req,res)=>{
+Carier.findOne({where: {studentId:req.params.studentId} }).then(function(carier) {
+      res.send(carier);
+    });   
+});
+
+
+//Busca Todos os Membros
 router.get('/', async (req,res)=>{
 Carier.findAll({order: 'createdAt DESC' }).then(function(cariers) {
       res.send(cariers);
     });   
 });
+
 
 //Busca total
 router.get('/count/all/cariers', async (req,res)=>{   

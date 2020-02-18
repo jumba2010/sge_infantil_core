@@ -22,8 +22,6 @@ router.post('/', async (req,res)=>{
          for (let index = 0; index < sucursals.length; index++) {
           UserSucursal.create({sucursalId:sucursals[index].id,userId:user.id,activatedBy,createdBy});
         } 
-
-        await sendNotification('258' + contact, `O%20seu%20cadastro%20foi%20efectuado%20com%20sucesso.%20Use%20as%20credenciais%20abaixo%20para%20entrar%20no%20sistema.%20Username%3A%20${username}%3B%20%20Password%3A%20${username}.%20%20NB%3A%20%20Nunca%20partilhe%20as%20suas%20credenciais%20`, 'LUZDODIA');
         
         res.send(_.pick(user,['id','username','active']));
       })   
@@ -175,32 +173,6 @@ router.get('/all', async (req,res)=>{
       
         });
 
-        function sendNotification(cellphone, message, senderId) {
-        let path= `/api/sendhttp.php?mobiles=${cellphone}&authkey=${keys.msg91AuthKey}&route=4&sender=${senderId}&message=${message}`;
-               var options = {
-              "method": "GET",
-              "hostname": "world.msg91.com",
-              "port": 443,
-              "path":`/api/sendhttp.php?mobiles=${cellphone}&authkey=${keys.msg91AuthKey}&route=4&sender=${senderId}&message=${message}`,
-              "headers": {}
-          };
-      
-          var req = http.request(options, function (res) {
-              var chunks = [];
-      
-              res.on("data", function (chunk) {
-                  chunks.push(chunk);
-              });
-      
-              res.on("end", function () {
-                  var body = Buffer.concat(chunks);
-                  console.log(body.toString());
-              });
-          });
-      
-          req.end();
-      
-      }
     
 
 module.exports=router;

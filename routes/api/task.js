@@ -11,7 +11,7 @@ var https = require("https");
 const keys = require('../../config/keys');
 const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 //Task que corre 5 em 5 minutos
-var task = cron.schedule('*/1 * * * *', async () => {
+var task = cron.schedule('0 12 * * *', async () => {
     console.log('Iniciando a task de caculo de multa e notificações');
     //Busca todas configuracoes de Mensagens
     let configurations = await Configuration.findAll({
@@ -37,16 +37,7 @@ var task = cron.schedule('*/1 * * * *', async () => {
                 carier = await Carier.findOne({
                     where: { studentId: payment.studentId }
                 });
-
-                console.log('Enviando notificação para ' + carier.contact)
-                let nextMonth=months[payment.month-1];
-                let endDay=conf.paymentEndDay;
-
-              //  let stringfyedMessage=encodeURIComponent(`Caro Encarregado, vimos por meio deste informar que a mensalidade referente ao mes de ${nextMonth} ja esta em cobranca, ate ao dia ${endDay} de ${nextMonth}. Faca ja o seu pagamento. Evite multas. Obrigado. `);
-
-              //  await sendNotification('258' + carier.contact,stringfyedMessage , conf.smsSenderID);
-                 
-
+            
                 await Payment.update(
                     { sentNotifications: 1, updatedBy: 1 },
                     { where: { id: payment.id } },
@@ -75,19 +66,12 @@ var task = cron.schedule('*/1 * * * *', async () => {
             carier = await Carier.findOne({
                 where: { studentId: payment.studentId }
             });
-            let currentMonth=months[payment.month];
-            console.log('Enviando notificação para ' + carier.contact)
-           // let stringfyedMessage=encodeURIComponent(`Caro Encarregado, vimos por meio deste informar que a mensalidade referente ao mes de ${currentMonth} esta a dois dias do seu prazo. Faca ja o seu pagamento. Evite multas. Obrigado. `);
-            //await sendNotification('258' + carier.contact, stringfyedMessage, conf.smsSenderID);
-
+            
             await Payment.update(
                 { sentNotifications: 2, updatedBy: 1 },
                 { where: { id: payment.id } },
-                { fields: ['sentNotifications', 'updatedBy'] },
-              
+                { fields: ['sentNotifications', 'updatedBy'] },  
             )
-
-            console.log('Segunda notificacao enviada para o numero ' + carier.contact)
 
         }
 
@@ -126,6 +110,7 @@ var task = cron.schedule('*/1 * * * *', async () => {
 });
 //Inicia a execução da task
 task.start();
+
 
 function sendNotification(cellphone, message, senderId) {
     let path= `/api/sendhttp.php?mobiles=${cellphone}&authkey=${keys.msg91AuthKey}&route=4&sender=${senderId}&message=${message}`;

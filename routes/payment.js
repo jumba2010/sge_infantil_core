@@ -1,15 +1,16 @@
 const express=require('express');
 const Payment=require('../models/payment');
 const Student=require('../models/student');
+const Sucursal=require('../models/sucursal');
 const router=express.Router();
  
 //Cria Membro
 router.post('/', async (req,res)=>{
-    const {month,year,total,fine,discount,status,registrationId,createdBy,activatedBy}=req.body; 
-    Payment.create({month,year,total,fine,discount,status,registrationId,createdBy,activatedBy}
-      ).then(function(worker) {
-        res.send(worker);
-      })
+  const {total,discount,studentId,limitDate,sucursal,year,registrationId,createdBy,month,sucursalCode,activatedBy}=req.body; 
+  let p= await Payment.create({month,year,total,limitDate,discount,registrationId,studentId,sucursalId:sucursal.id,createdBy,activatedBy}
+          )
+      res.send(p);
+    
 });
 
 //Actualiza Obreiro
@@ -33,6 +34,23 @@ router.put('/pay/:id', async (req,res)=>{
   const {updatedBy,receiptNumber,paymentMethod}=req.body;  
    Payment.update(
   {status:1,paymentMethod,code:receiptNumber,paymentDate:Date.now(),updatedBy},  
+  { where: { id:req.params.id} },    
+       {fields: ['status','updatedBy','paymentDate','receiptNumber','paymentMethod']},
+     
+    )
+      .then(result =>
+          res.send(result)
+      )
+      .catch(err =>
+        console.log(err)
+      )    
+});
+
+
+router.put('/anull/:id', async (req,res)=>{
+  const {updatedBy}=req.body;  
+   Payment.update(
+  {status:0,updatedBy},  
   { where: { id:req.params.id} },    
        {fields: ['status','updatedBy','paymentDate','receiptNumber','paymentMethod']},
      

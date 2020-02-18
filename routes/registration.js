@@ -12,9 +12,11 @@ router.post('/', async (req,res)=>{
     Registration.create({totalPaid,monthlyPayment,discount,isNew,needSpecialTime,studentId,sucursalId:sucursal.id,classId,createdBy,activatedBy}
       ).then(async function(registration) { 
 
-        
-        let initialMont=sucursal.code==='MT_01'?2:1; 
+       
+        var initialMont=sucursal.code==='MT_01'?2:1; 
         let today = new Date();
+        if((sucursal.code==='MT_01' && today.getMonth()>2)
+        ||(sucursal.code==='MT_02' && today.getMonth()>1))initialMont=today.getMonth();
           //Verifica se esta  iscrição está sendo feita após a data de inicio das aulas
           let configuration = await Configuration.findOne({
             where: { sucursalId: sucursal.id }
@@ -26,15 +28,7 @@ router.post('/', async (req,res)=>{
           Payment.create({month:i,year,total:monthlyPayment,limitDate:limitDate.utc().format("YYYY-MM-DD"),discount,registrationId:registration.id,studentId,sucursalId:sucursal.id,createdBy,activatedBy}
             )
         }
-  
-
         res.send(registration);
-
-        
-        
-      
-  
-       
       })
 });
 
@@ -82,6 +76,12 @@ Registration.findAll({order: 'createdAt DESC' }).then(function(registrations) {
       res.send(registrations);
     });   
 });
+
+router.get('/studentId/:studentId', async (req,res)=>{
+  Registration.findAll({where:{ studentId:req.params.studentId},order: 'createdAt DESC' }).then(function(registrations) {
+      res.send(registrations[0]);
+      });   
+  });
 
 router.get('/count/all/registrations', async (req,res)=>{   
   Registration.count()

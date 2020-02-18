@@ -9,7 +9,7 @@ const SentMessage = sequelize.define('SentMessage', {
   number: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   message: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   date: {type:Sequelize.DATE,allowNull:false, defaultValue: Sequelize.NOW,validate: {notNull: true}},
-  syncStatus: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true},defaultValue:0},
+ 
 });
 
 module.exports = SentMessage;
