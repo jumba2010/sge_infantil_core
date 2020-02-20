@@ -31,8 +31,8 @@ router.put('/:id', async (req,res)=>{
 
 //Actualiza Obreiro
 router.put('/pay/:id', async (req,res)=>{
-  const {updatedBy,receiptNumber,paymentMethod}=req.body;  
-   Payment.update(
+  const {updatedBy,receiptNumber,paymentMethod,studentId}=req.body;  
+  await  Payment.update(
   {status:1,paymentMethod,code:receiptNumber,paymentDate:Date.now(),updatedBy},  
   { where: { id:req.params.id} },    
        {fields: ['status','updatedBy','paymentDate','receiptNumber','paymentMethod']},
@@ -43,12 +43,19 @@ router.put('/pay/:id', async (req,res)=>{
       )
       .catch(err =>
         console.log(err)
-      )    
+      );
+      
+      await  Student.update(
+        {syncStatus:1,updatedBy},
+        { where: { id:studentId} },
+        {fields: ['syncStatus','updatedBy']},
+       
+      );
 });
 
 
 router.put('/anull/:id', async (req,res)=>{
-  const {updatedBy}=req.body;  
+  const {updatedBy,studentId}=req.body;  
    Payment.update(
   {status:0,updatedBy},  
   { where: { id:req.params.id} },    
@@ -60,7 +67,14 @@ router.put('/anull/:id', async (req,res)=>{
       )
       .catch(err =>
         console.log(err)
-      )    
+      )   
+      
+      await  Student.update(
+        {syncStatus:1,updatedBy},
+        { where: { id:studentId} },
+        {fields: ['syncStatus','updatedBy']},
+       
+      );
 });
 
 //Actualiza Obreiro

@@ -13,10 +13,10 @@ router.post('/', async (req,res)=>{
       ).then(async function(registration) { 
 
        
-        var initialMont=sucursal.code==='MT_01'?2:1; 
+        var initialMont=sucursal.code==='001'?2:1; 
         let today = new Date();
-        if((sucursal.code==='MT_01' && today.getMonth()>2)
-        ||(sucursal.code==='MT_02' && today.getMonth()>1))initialMont=today.getMonth();
+        if((sucursal.code==='001' && today.getMonth()>2)
+        ||(sucursal.code==='002' && today.getMonth()>1))initialMont=today.getMonth();
           //Verifica se esta  iscrição está sendo feita após a data de inicio das aulas
           let configuration = await Configuration.findOne({
             where: { sucursalId: sucursal.id }

@@ -108,15 +108,27 @@ const sincronizeData=async (socket,sucursal)=>{
         {syncStatus:2,updatedBy:0},
         { where: { id:students[i].id} },
         {fields: ['syncStatus','updatedBy']});
+
+        console.log('Total: ',students.length);
+        console.log('Percentagem: ',(processed*100)/students.length);
+        socket.emit("percentage",(processed*100)/students.length);
+        console.log('Estudante '+student.name+' sincronizado com sucesso!');
+        console.log('Processados: ',processed);
+
+        if(processed===students.length){
+          socket.emit("finish",'Sincronizacao Finalizada');
+        console.log('Todos os dados foram sincronizados com sucesso!');
+        console.log('Task processada com sucesso!');
+      }
       }
       catch (e) {
         console.log("Erro ao sincronizar dados");
         console.log(e);
+
+         socket.emit("error",'Erro ao sincronizar dados');
       }
       
-      
        } //Fim do ciclo de criacao
-      
       
        //###################______Actualizacao______________####################
       else{
@@ -139,9 +151,9 @@ const sincronizeData=async (socket,sucursal)=>{
       console.log('Inscricao Remoto',remoteRegistration.data.id)
       //Buscar o registration no servidor
        await api.put("/api/student/client/"+remoteStudent.data.id, {
-         name:student.name,alergicToFood,alergicToMedicine,
+         name:student.name,alergicToFood:student.alergicToFood,alergicToMedicine:student.alergicToMedicine,
          carierId:remoteCarier.data.id,active:student.active,
-         registrationId:remoteRegistration.data.id,oldSchool,address:student.address,sex:student.sex,
+         registrationId:remoteRegistration.data.id,oldSchool:student.oldSchool,address:student.address,sex:student.sex,
          birthDate:student.birthDate,docType:student.docType,docNumber:student.docNumber,
          studentNumber:student.studentNumber,carierActive:carier.active,
          motherName:student.motherName,fatherName:student.fatherName,picture:student.picture,
@@ -158,34 +170,43 @@ const sincronizeData=async (socket,sucursal)=>{
           
        })
       
-      
+      }
+
+      await  Student.update(
+        {syncStatus:2,updatedBy:0},
+        { where: { id:students[i].id} },
+        {fields: ['syncStatus','updatedBy']});
+
+        console.log('Total: ',students.length);
+        console.log('Percentagem: ',(processed*100)/students.length);
+        socket.emit("percentage",(processed*100)/students.length);
+        console.log('Estudante '+student.name+' sincronizado com sucesso!');
+        console.log('Processados: ',processed);
+
+        if(processed===students.length){
+          socket.emit("finish",'Sincronizacao Finalizada');
+        console.log('Todos os dados foram sincronizados com sucesso!');
+        console.log('Task processada com sucesso!');
       }
       }
       catch (e) {
-        console.log("Erroao sincronizar dados");
+        console.log("Erro ao sincronizar dados");
         console.log(e);
+        socket.emit("error",'Erro ao sincronizar dados');
       }
+
+     
+     
       }
       
-          console.log('Total: ',students.length);
-          console.log('Percentagem: ',(processed*100)/students.length);
-          socket.emit("percentage",(processed*100)/students.length);
-          console.log('Estudante '+student.name+' sincronizado com sucesso!');
-          console.log('Processados: ',processed);
+ 
           
        }
       
-
-       socket.emit("finish",'Sincronizacao Finalizada');
+       
         });
    
-     // socket.emit('sincronized','Todos os dados foram sincronizados');
-      console.log('Todos os dados foram sincronizados com sucesso!');
-      console.log('Task processada com sucesso!');
-
-      res.sendStatus(200);
-
-
+        
 };
     
   module.exports = sincronizeData;

@@ -134,7 +134,7 @@ app.use(function (err, req, res, next) {
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'jade')
 
-app.get('/*', function(req, res) {
+app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
