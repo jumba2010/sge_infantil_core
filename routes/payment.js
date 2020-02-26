@@ -2,6 +2,7 @@ const express=require('express');
 const Payment=require('../models/payment');
 const Student=require('../models/student');
 const Sucursal=require('../models/sucursal');
+const sequelize=require('sequelize');
 const router=express.Router();
  
 //Cria Membro
@@ -161,13 +162,75 @@ router.get('/mypayments/:studentId', async (req,res)=>{
     
   
 //Busca total
-router.get('/count/all/payments', async (req,res)=>{   
-  Payment.count()
-.then(function(total) {
-  res.status(200).json({
-    total: total
-  });
-});
+router.get('/count/:sucursalId/:year/:month', async (req,res)=>{
+  var newList=[];
+  if(req.params.month==='0'){
+    for (let index = 1; index < 12; index++) {
+      const month = index;
+      const studentsPaid = await Payment.count({
+        where:{ sucursalId:req.params.sucursalId,year:req.params.year,month:month,status:1}
+        });
+      
+        const studentsUnPaid = await Payment.count({
+          where:{ sucursalId:req.params.sucursalId,year:req.params.year,month:month,status:0}
+          });
+      
+          await  Payment.findAll({
+            attributes: [[sequelize.fn('sum', sequelize.col('total')), 'total']],
+            raw: true,  where:{ sucursalId:req.params.sucursalId,year:req.params.year,month:month,status:1}
+          }).then(async function(paidValue) {
+            await  Payment.findAll({
+              attributes: [[sequelize.fn('sum', sequelize.col('total')), 'total']],
+              raw: true,  where:{ sucursalId:req.params.sucursalId,year:req.params.year,month:month,status:0}
+            }).then(function(unPaidValue) {
+        
+              if(studentsPaid!=0 || month<=(new Date()).getMonth() ){
+  
+              newList.push({month:month, studentsPaid:studentsPaid,studentsUnPaid:studentsUnPaid,paidValue:paidValue[0],unPaidValue:unPaidValue[0]})
+            }
+            })
+          })  
+         
+    }
+
+    res.json(newList);
+    }
+        else{
+
+          const month = req.params.month
+          const studentsPaid = await Payment.count({
+            where:{ sucursalId:req.params.sucursalId,year:req.params.year,month:month,status:1}
+            });
+          
+            const studentsUnPaid = await Payment.count({
+              where:{ sucursalId:req.params.sucursalId,year:req.params.year,month:month,status:0}
+              });
+          
+             await  Payment.findAll({
+                attributes: [[sequelize.fn('sum', sequelize.col('total')), 'total']],
+                raw: true,  where:{ sucursalId:req.params.sucursalId,year:req.params.year,month:month,status:1}
+              }).then(async function(paidValue) {
+                await     Payment.findAll({
+                  attributes: [[sequelize.fn('sum', sequelize.col('total')), 'total']],
+                  raw: true,  where:{ sucursalId:req.params.sucursalId,year:req.params.year,month:month,status:0}
+                }).then(function(unPaidValue) {
+            
+                  if(studentsPaid!=0 || month<=(new Date()).getMonth() ){
+      
+                  newList.push({month:month, studentsPaid:studentsPaid,studentsUnPaid:studentsUnPaid,paidValue:paidValue[0],unPaidValue:unPaidValue[0]})
+                  
+                }
+                })
+              })  
+          
+    res.json(newList);
+        }
+
+  
+
+ 
+  
+
 });
 
 router.get('/betwen/:startdate/:endDate/:page', async (req,res)=>{
