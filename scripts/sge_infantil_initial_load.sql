@@ -58,3 +58,23 @@ ALTER TABLE ProfileTransactions
 ADD COLUMN syncStatus INT NOT NULL default 0;
 
 Update sge_teste.Students set studentNumber=concat("2020001",lpad(""+id,5,"0"));
+
+
+CREATE TABLE `FineConfigs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `startDay` int(11) NOT NULL,
+  `percentagem` int(11) NOT NULL,
+  `endDay` int(11) NOT NULL,
+  `sucursal_id` int(11) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `created_by` int(11) NOT NULL,
+  `updated_by` int(11) DEFAULT NULL,
+  `activated_by` int(11) NOT NULL,
+  `activation_date` datetime NOT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sucursal_id` (`sucursal_id`),
+  CONSTRAINT `FineConfigs_ibfk_1` FOREIGN KEY (`sucursal_id`) REFERENCES `Sucursals` (`id`)
+) ENGINE=InnoDB;
+

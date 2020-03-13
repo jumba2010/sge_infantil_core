@@ -1,9 +1,9 @@
 var fs = require('fs');
 const express = require('express');
 const router = express.Router();
-
 const cron = require('node-cron');
 const Configuration = require('../../models/paymentconfig');
+const FineConfig = require('../../models/fineConfig');
 const Payment = require('../../models/payment');
 var moment = require('moment');
 const Carier = require('../../models/carier');
@@ -89,8 +89,12 @@ var task = cron.schedule('0 12 * * *', async () => {
                 where: { studentId: payment.studentId }
             });
 
+//Verifica em quanto tempo o pagamento esta atrazado
+let days=moment(payment.limitDate).fromNow();
+
+let fineConfig=await  FineConfig.findOne({where:{sucursalId:conf.sucursalId,endDay:{gte:days},startDay:{lte:days}}}); 
             //Aplicar a Multa 
-            let fine = payment.total * 0.05;
+            let fine = payment.total * fineConfig.percentage/100;
             let newTotal = payment.total + fine;
             await Payment.update(
                 { fine, total: newTotal, hasFine: true, updatedBy: 1 },

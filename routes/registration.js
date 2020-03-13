@@ -16,15 +16,16 @@ router.post('/', async (req,res)=>{
         var initialMont=sucursal.code==='001'?2:1; 
         let today = new Date();
         if((sucursal.code==='001' && today.getMonth()>2)
-        ||(sucursal.code==='002' && today.getMonth()>1))initialMont=today.getMonth();
+        ||(sucursal.code==='002' && today.getMonth()>1))initialMont=today.getMonth()+1;
           //Verifica se esta  iscrição está sendo feita após a data de inicio das aulas
           let configuration = await Configuration.findOne({
             where: { sucursalId: sucursal.id }
         });
 
         for(i=initialMont; i<=11;i++){
-          let limitDate=moment([year, i, configuration.paymentEndDay+1])
-          limitDate.utc().format("YYYY-MM-DD");       
+          
+          let limitDate=moment([year, (i-1), configuration.paymentEndDay+1])
+          ;     
           Payment.create({month:i,year,total:monthlyPayment,limitDate:limitDate.utc().format("YYYY-MM-DD"),discount,registrationId:registration.id,studentId,sucursalId:sucursal.id,createdBy,activatedBy}
             )
         }
