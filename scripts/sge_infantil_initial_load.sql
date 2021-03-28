@@ -76,5 +76,5 @@ CREATE TABLE `FineConfigs` (
   PRIMARY KEY (`id`),
   KEY `sucursal_id` (`sucursal_id`),
   CONSTRAINT `FineConfigs_ibfk_1` FOREIGN KEY (`sucursal_id`) REFERENCES `Sucursals` (`id`)
-) ENGINE=InnoDB;
+);
 
