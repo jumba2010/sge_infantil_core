@@ -158,6 +158,7 @@ router.get('/all', async (req,res)=>{
             var sucursals=[]
             let userSucursals=await  UserSucursal.findAll({raw: true,where:{userId:user.id}
             });    
+   
            for (let index = 0; index < userSucursals.length; index++) {
                       let sucursal=await  Sucursal.findOne({raw: true,where:{id:userSucursals[index].sucursalId}
              });

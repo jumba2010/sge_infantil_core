@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const Sucursal=require('./sucursal');
-const Registration=require('./registration');
 const Student = sequelize.define('Student', {
   name: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,notEmpty: true}},
   address: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
@@ -46,7 +45,5 @@ const Student = sequelize.define('Student', {
   },
 }
 );
-
-Registration.belongsTo(Student,{foreignKey:'student_id'})
 
 module.exports = Student;

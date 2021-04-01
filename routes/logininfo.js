@@ -4,9 +4,10 @@ const router=express.Router();
  
 //Cria Membro
 router.post('/', async (req,res)=>{
-  const {ipaddress,userAgent,location,userId}=req.body; 
-  await LoginInfo.create({ipaddress,userAgent,location,userId,createdBy:1,activatedBy:1}).then(async function(logininfo) {       
-    res.send(logininfo);           
+  const {ipaddress,userAgent,location,userId}=req.body;
+  await LoginInfo.create({ipaddress,userAgent,location,userId,createdBy:1,activatedBy:1}).then(async function(logininfo) {    
+    res.send(logininfo); 
+
             }); 
 });
 

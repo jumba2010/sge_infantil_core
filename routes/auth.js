@@ -16,6 +16,7 @@ router.post('/', async (req,res)=>{
     // Valida a existencia do user
     let user=await User.findOne({ where: {username:userName,active: true} });  
     if(!user) return res.status(400).send('Invalid username or  password');
+    
     const validPassword=await bcrypt.compareSync(password,user.password);
 if(!validPassword) return res.status(400).send('Invalid username or  password');
 

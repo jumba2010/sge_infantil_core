@@ -1,5 +1,5 @@
-INSERT INTO `sucursals` (`id`,`code`,`description`,`active`,`created_by`,`updated_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (1,'MT_01','Externato Luz do Dia',1,1,NULL,1,'2019-11-25 11:00:00','2019-11-25 11:00:00','2019-11-25 11:00:00');
-INSERT INTO `sucursals` (`id`,`code`,`description`,`active`,`created_by`,`updated_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (2,'MT_02','Centro Infantil Luz do Dia',1,1,NULL,1,'2019-11-25 11:00:00','2019-11-25 11:00:00','2019-11-25 11:00:00');
+INSERT INTO `sucursals` (`id`,`code`,`description`,`active`,`created_by`,`updated_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (1,'001','Externato Luz do Dia',1,1,NULL,1,'2019-11-25 11:00:00','2019-11-25 11:00:00','2019-11-25 11:00:00');
+INSERT INTO `sucursals` (`id`,`code`,`description`,`active`,`created_by`,`updated_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (2,'002','Centro Infantil Luz do Dia',1,1,NULL,1,'2019-11-25 11:00:00','2019-11-25 11:00:00','2019-11-25 11:00:00');
 INSERT INTO `frequencies` (`level`,`description`,`specialHourMonthlyValue`,`recurigRegistrationValue`,`registrationValue`, `monthlyPayment`,`sucursal_id`,`active`,`created_by`,`updated_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (1,'Primeira  Classe','0.0', '0.0','0.0', '0.0',1,1,1,NULL,1,'2019-11-25 17:00:00','2019-11-25 17:00:00','2019-11-25 17:00:00');
 INSERT INTO `frequencies` (`level`,`description`,`specialHourMonthlyValue`,`recurigRegistrationValue`,`registrationValue`, `monthlyPayment`,`sucursal_id`,`active`,`created_by`,`updated_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (2,'Segunda  Classe','0.0', '0.0','0.0', '0.0',1,1,1,NULL,1,'2019-11-25 17:00:00','2019-11-25 17:00:00','2019-11-25 17:00:00');
 INSERT INTO `frequencies` (`level`,`description`,`specialHourMonthlyValue`,`recurigRegistrationValue`,`registrationValue`, `monthlyPayment`,`sucursal_id`,`active`,`created_by`,`updated_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (3,'Terceirea  Classe','0.0', '0.0','0.0', '0.0',1,1,1,NULL,1,'2019-11-25 17:00:00','2019-11-25 17:00:00','2019-11-25 17:00:00');
@@ -26,6 +26,8 @@ INSERT INTO `sge_infantil_db`.`transactions` (`code`, `description`, `active`, `
 INSERT INTO `sge_infantil_db`.`profiles` (`code`, `description`, `active`, `created_by`, `activated_by`, `activation_date`, `createdAt`, `updatedAt`) VALUES ('001', 'Funcionário(a)', '1', '1', '1', '2019-12-17 04:14:00', '2019-12-17 04:14:00', '2019-12-17 04:14:00');
 INSERT INTO `sge_infantil_db`.`profiles` (`code`, `description`, `active`, `created_by`, `activated_by`, `activation_date`, `createdAt`, `updatedAt`) VALUES ('002', 'Director(a)', '1', '1', '1', '2019-12-17 04:14:00', '2019-12-17 04:14:00', '2019-12-17 04:14:00');
 INSERT INTO `users` (`id`,`name`,`email`,`contact`,`address`,`picture`,`username`,`password`,`profile_id`,`active`,`created_by`,`updated_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (1,'Judiao Mbaua','','841143433','M. Gare','','admin','$2b$10$Bd744PH6uVopvcYycyf2k.DKp7AHF1Ow.RrwCFwZ41/LDBQxG9Oj2',2,1,1,NULL,1,'2019-12-23 01:33:13','2019-12-23 01:33:13','2019-12-23 01:33:13');
+INSERT INTO `usersucursals` (`user_id`,`sucursal_id`,`active`,`created_by`,`activated_by`,`activation_date`,`createdAt`,`updatedAt`) VALUES (1,1,1,1,1,'2019-12-23 01:33:13','2019-12-23 01:33:13','2019-12-23 01:33:13');
+
 
 ALTER TABLE Students
 ADD COLUMN syncStatus INT NOT NULL default 0;
@@ -76,5 +78,5 @@ CREATE TABLE `FineConfigs` (
   PRIMARY KEY (`id`),
   KEY `sucursal_id` (`sucursal_id`),
   CONSTRAINT `FineConfigs_ibfk_1` FOREIGN KEY (`sucursal_id`) REFERENCES `Sucursals` (`id`)
-);
+) ENGINE=InnoDB;
 

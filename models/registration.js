@@ -9,6 +9,7 @@ const Registration = sequelize.define('Registration', {
   discount: {type:Sequelize.DOUBLE(4,2),allowNull:false,defaultValue:0.00, validate: {notNull: true}},
   isNew:{type:Sequelize.BOOLEAN,allowNull:false,defaultValue:true, validate: {notNull: true}},  
   needSpecialTime:{type:Sequelize.BOOLEAN,allowNull:false,defaultValue:false, validate: {notNull: true}},
+  year: {type:Sequelize.INTEGER(4,2),allowNull:false, validate: {notNull: true}},
   studentId: {
     type: Sequelize.INTEGER,
     field: 'student_id',
