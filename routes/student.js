@@ -142,73 +142,83 @@ router.get('/unique/:id', async (req, res) => {
 router.get('/unrenewd/sucursal/:sucursalId', async (req, res) => {
   var newList = []
   let year = new Date().getFullYear()
-   Student.findAll({
+   await Student.findAll({
     raw: true, where: { sucursalId: req.params.sucursalId }, order: [
       ['createdAt', 'DESC'],
     ],
-  }).then(function (students) {
+  }).then(async function (students) {
     if(students.length==0){
-      res.send([]);
+      return res.send([]);
     }
-var size=students.length
-    students.forEach(st => {
-size--
-       Registration.findOne({ raw:true, where: { studentId: st.id, year } }).then(function (reg) {
-        //Retunr only if havent renewd 
+    var size=students.length
+    for(var i=0;i<size;i++) {
+      let st=students[i]
+      console.log("A buscar inscricoes")
+      let reg= await Registration.findOne({ raw:true, where: { studentId: st.id, year } })
+        
+      console.log("Processou inscricao ")
+      //Retunr only if havent renewd 
         if (!reg) {
-          Payment.findAll({
+          console.log("Buscando Pagamentos")
+        let payments= await Payment.findAll({
             raw: true, where: { studentId: st.id }, order: [
               ['month', 'ASC'],
             ],
-          }).then(function (payments) {
-            Carier.findOne({ where: { studentId: st.id } }).then(function (carier) {
+          })
+          console.log("Encontrou pagamentos ",payments.length)
+        let carier =await  Carier.findOne({ where: { studentId: st.id } })
+        console.log("Encontrou carier ",carier.id)
               st.payments = payments;
               st.carier = carier;
               st.registration = reg;
               newList.push(st)
-              if(size==0){
-                res.send(newList);
-              }
-            })
-          })
+              if(i==size-1){
+                console.log("Entrou",i,size-1)
+                return res.send(newList);
+              }   
         }
-      });
-    })
+      
+      }
   });
 
  
 });
 
 
-router.get('/all/sucursal/:sucursalId', async (req, res) => {
-  var newList = []
-  let year = new Date().getFullYear()
-  await Student.findAll({
+router.get('/history/sucursal/:sucursalId', async (req, res) => {
+  let newList = []
+  
+ let students= await Student.findAll({
     raw: true, where: { sucursalId: req.params.sucursalId }, order: [
       ['createdAt', 'DESC'],
-    ],
-  }).then(function (students) {
-    students.forEach(st => {
-      Registration.findAll({ raw: true, where: { studentId: element.id } }).then(function (regs) {
-       
-          Payment.findAll({
-            raw: true, where: { studentId: element.id }, order: [
-              ['month', 'ASC'],
-            ],
-          }).then(function (payments) {
-            Carier.findOne({ where: { studentId: element.id } }).then(function (carier) {
-              st.payments = payments;
-              st.carier = carier;
-              st.registrations = regs;
-              newList.push(st)
-            })
-          })
-        
-      });
-    })
-  });
+    ],})
 
-  res.send(newList);
+for(var i=0;i<students.length;i++){
+  let st=students[i]
+     let carier=await  Carier.findOne({ where: { studentId: st.id } })
+     let registrations=await Registration.findAll({ raw: true, where: { studentId: st.id } , order: [
+      ['createdAt', 'DESC'],
+    ],})
+     
+     registrations.forEach(async reg=>{
+     let payments= await Payment.findAll({
+        raw: true, where: { registrationId: reg.id }, order: [
+          ['month', 'ASC'],
+        ],
+      })
+
+     reg.payments=payments
+     })
+
+     st.carier = carier;
+     st.registrations = registrations;
+     newList.push(st)
+
+     if(i==students.length-1){
+      res.send(newList);
+     }
+      
+    }
 });
 
 router.get('/count/all/students', async (req, res) => {

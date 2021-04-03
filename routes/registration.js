@@ -41,13 +41,36 @@ router.post('/', async (req, res) => {
 
 //Renova a inscricao
 router.post('/renew', async (req, res) => {
-  const { year, totalPaid, monthlyPayment, discount, needSpecialTime, studentId, sucursal, classId, createdBy, activatedBy } = req.body;
+  const { year, totalPaid, monthlyPayment,payFirstMonth, discount, needSpecialTime, studentId, sucursal, classId,level, createdBy, activatedBy } = req.body;
+  console.log(level)
+  
   Registration.create({ year, totalPaid, monthlyPayment, discount, isNew: false, needSpecialTime, studentId, sucursalId: sucursal.id, classId, createdBy, activatedBy }
   ).then(async function (registration) {
-    var initialMont = 3;
-    for (i = initialMont; i <= 11; i++) {
+    var initialMont = 4;
+    let configuration = await Configuration.findOne({
+      where: { sucursalId: sucursal.id }
+    });
+
+    //Actualiza o nivel no estudante
+    await Student.update(
+      { currentMonthlyPayment:monthlyPayment, level, updatedBy:createdBy,syncStatus:1 },
+      { where: { id: studentId} },
+      { fields: [ 'syncStatus', 'currentMonthlyPayment', 'level', 'updatedBy'] },
+  
+    );
+
+    for (i = initialMont; i <= 12; i++) {
       let limitDate = moment([year, (i - 1), configuration.paymentEndDay + 1])
-      Payment.create({ month: i, year, total: monthlyPayment, limitDate: limitDate.utc().format("YYYY-MM-DD"), discount, registrationId: registration.id, studentId, sucursalId: sucursal.id, createdBy, activatedBy })
+     
+     //A primeira mensalidade geralmente eh paga na renovacao de inscrica
+      if(i==initialMont && payFirstMonth){
+        Payment.create({status:1, month: i, year, total: monthlyPayment, limitDate: limitDate.utc().format("YYYY-MM-DD"), discount, registrationId: registration.id, studentId, sucursalId: sucursal.id, createdBy, activatedBy })
+      }
+
+      else{
+        Payment.create({ month: i, year, total: monthlyPayment, limitDate: limitDate.utc().format("YYYY-MM-DD"), discount, registrationId: registration.id, studentId, sucursalId: sucursal.id, createdBy, activatedBy })
+      }
+     
     }
     res.send(registration);
   })
@@ -82,7 +105,6 @@ router.put('/inativate/:id', async (req, res) => {
       console.log(err)
     )
 });
-
 
 router.get('/:page', async (req, res) => {
   var page = req.params.page;
@@ -166,6 +188,11 @@ router.get('/current/:sucursalId', async (req, res) => {
       ['createdAt', 'DESC'],
     ]
   }).then(function (registrations) {
+if(registrations.length==0){
+  res.send([]);
+
+}
+    
     registrations.forEach(registration => {
       Student.findOne({
         raw: true, where: { id: registration.studentId }
