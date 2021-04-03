@@ -1,5 +1,5 @@
 module.exports={
-  msqlUsername:'root',
+  msqlUsername:'mozit',
   msqlDbName:'sge',
   mysqlpassword: 'admin2253'
   };

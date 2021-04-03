@@ -150,7 +150,7 @@ app.get('/api/syncronize/count/:sucursalId', async (req,res)=>{
   res.json({ amount});
   });
 
-server.listen(3333, '127.0.0.1',() => {
+server.listen(8080, '0.0.0.0',() => {
   console.log(`server running on port ${3333}`);
 
 }
