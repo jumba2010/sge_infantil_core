@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
 //Renova a inscricao
 router.post('/renew', async (req, res) => {
   const { year, totalPaid, monthlyPayment,payFirstMonth, discount, needSpecialTime, studentId, sucursal, classId,level, createdBy, activatedBy } = req.body;
-  console.log(level)
+  console.log(leve)
   
   Registration.create({ year, totalPaid, monthlyPayment, discount, isNew: false, needSpecialTime, studentId, sucursalId: sucursal.id, classId, createdBy, activatedBy }
   ).then(async function (registration) {

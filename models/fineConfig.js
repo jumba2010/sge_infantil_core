@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const Sucursal=require('./sucursal');
-const FineConfig = sequelize.define('FineConfig', {
+const FineConfig = sequelize.define('fineconfig', {
   startDay: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true}},
   endDay: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true}},
   percentagem: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true}},

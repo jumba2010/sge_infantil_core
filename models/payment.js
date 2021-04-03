@@ -3,7 +3,7 @@ const sequelize = require('../config/dbconfig');
 const Registration = require('./registration');
 const Student = require('./student');
 const Sucursal=require('./sucursal');
-const Payment = sequelize.define('Payment', {
+const Payment = sequelize.define('payment', {
   month: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true}},
   year: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true}},
   total: {type:Sequelize.DOUBLE(14,4),allowNull:false,validate: {notNull: true}},

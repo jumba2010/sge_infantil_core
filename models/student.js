@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const Sucursal=require('./sucursal');
-const Student = sequelize.define('Student', {
+const Student = sequelize.define('student', {
   name: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,notEmpty: true}},
   address: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   sex: {type:Sequelize.ENUM('M', 'F'),allowNull:false, validate: {notNull: true}},

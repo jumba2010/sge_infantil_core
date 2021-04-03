@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
-const SentMessage = sequelize.define('SentMessage', {
+const SentMessage = sequelize.define('sentmessage', {
   sucursalId: {type:Sequelize.INTEGER,allowNull:false, validate: {notNull: true}},
   requestId: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   senderId: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const Student=require('./student');
-const Carier = sequelize.define('Carier', {
+const Carier = sequelize.define('carier', {
   name: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   kinshipDegree: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
   principal: {type:Sequelize.BOOLEAN,allowNull:false, validate: {notNull: true},defaultValue:true},

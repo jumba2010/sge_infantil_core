@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const Transaction=require('./transaction');
 const Profile=require('./profile');
-const ProfileTransaction = sequelize.define('ProfileTransaction', {
+const ProfileTransaction = sequelize.define('profiletransaction', {
   transactionId: {
     type: Sequelize.INTEGER,
     field: 'transaction_id',

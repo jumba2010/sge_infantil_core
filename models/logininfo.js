@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const User = require('./user');
-const LoginInfo = sequelize.define('LoginInfo', {
+const LoginInfo = sequelize.define('logininfo', {
   ipaddress: {type:Sequelize.STRING},
   macaddress: {type:Sequelize.STRING},
   location: {type:Sequelize.STRING},

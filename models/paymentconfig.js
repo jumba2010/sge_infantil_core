@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const Sucursal=require('./sucursal');
-const PaymentConfig = sequelize.define('PaymentConfig', {
+const PaymentConfig = sequelize.define('paymentconfig', {
   smsSenderID:{type:Sequelize.STRING},
   paymentStartDay: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true}},
   paymentEndDay: {type:Sequelize.INTEGER,allowNull:false,validate: {notNull: true}},

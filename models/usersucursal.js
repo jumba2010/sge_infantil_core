@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const User=require('./user');
 const Sucursal=require('./sucursal');
-const UserSucursal = sequelize.define('UserSucursal', {
+const UserSucursal = sequelize.define('usersucursal', {
   userId: {
     type: Sequelize.INTEGER,
     field: 'user_id',

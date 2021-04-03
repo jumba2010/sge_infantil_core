@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
-const Transaction = sequelize.define('Transaction', {
+const Transaction = sequelize.define('transaction', {
   code: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,notEmpty: true}},
   description: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,notEmpty: true}},
   active:{type:Sequelize.BOOLEAN,defaultValue:true,allowNull:false, validate: {notNull: true}},

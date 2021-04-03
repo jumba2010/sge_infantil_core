@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
-const Profile = sequelize.define('Profile', {
+const Profile = sequelize.define('profile', {
   code: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,notEmpty: true}},
   description: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,notEmpty: true}},  
   active:{type:Sequelize.BOOLEAN,defaultValue:true,allowNull:false, validate: {notNull: true}},
