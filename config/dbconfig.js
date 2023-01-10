@@ -6,7 +6,7 @@ const sequelize = new Sequelize(keys.msqlDbName, keys.msqlUsername, keys.mysqlpa
   });
   sequelize.authenticate().then(() => {
 console.log('Connected to mysql')});
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
   .then(() => {
     console.log(`Database & tables created!`)
   })

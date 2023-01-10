@@ -8,6 +8,12 @@ const carier = require('./routes/carier');
 const profile = require('./routes/profile');
 const payment = require('./routes/payment');
 const sucursal = require('./routes/sucursal');
+const classRoute = require('./routes/class');
+const teacher = require('./routes/teacher');
+const subject = require('./routes/subject');
+const subjectTest = require('./routes/subjecttest');
+const grade = require('./routes/grade');
+const studentGrade = require('./routes/studentgrade');
 const path = require('path');
 const registration = require('./routes/registration');
 const frequency = require('./routes/frequency');
@@ -67,6 +73,14 @@ app.use('/api/smsntification', smsntification);
 app.use('/api/frequency', frequency);
 app.use('/api/logininfo', logininfo);
 app.use('/api/task', task);
+app.use('/api/teacher', teacher);
+app.use('/api/class', classRoute);
+
+app.use('/api/grade', grade);
+app.use('/api/student-grade', studentGrade);
+app.use('/api/subject', subject);
+app.use('/api/subject-test', subjectTest);
+
 app.use('/api/sincronize', router);
 
 app.use('/public/files', express.static(__dirname + '/public/files'));

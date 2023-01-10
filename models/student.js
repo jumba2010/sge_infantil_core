@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../config/dbconfig');
 const Sucursal=require('./sucursal');
+const Class = require('./class');
 const Student = sequelize.define('student', {
   name: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true,notEmpty: true}},
   address: {type:Sequelize.STRING,allowNull:false, validate: {notNull: true}},
@@ -45,5 +46,7 @@ const Student = sequelize.define('student', {
   },
 }
 );
-
+Class.hasMany(Student);
+Student.belongsTo(Class);
+Student.belongsTo(Sucursal);
 module.exports = Student;
