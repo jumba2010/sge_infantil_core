@@ -1,6 +1,6 @@
 const keys = require('./keys');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(keys.msqlDbName, keys.msqlUsername, keys.mysqlpassword, {
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
   dialect: 'mysql',
   logging: false
   });

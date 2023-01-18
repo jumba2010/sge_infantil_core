@@ -8,7 +8,6 @@ const Payment = require('../../models/payment');
 var moment = require('moment');
 const Carier = require('../../models/carier');
 var https = require("https");
-const keys = require('../../config/keys');
 const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 //Task que corre 5 em 5 minutos
 var task = cron.schedule('*/2 * * * *', async () => {
@@ -64,78 +63,81 @@ var task = cron.schedule('*/2 * * * *', async () => {
 
         }//Fim do fluxo de envio da primeira notificacao
 
-        //3. Buscar todos os pagamentos que estão a dois dias de expirar o prazo de pagamento e que ainda nao tenham sido notificados a segunda vez, enviar a notificacao e sinalizar
-//        let limitDate=moment([today.getFullYear(), today.getMonth(), today.getDate()+3])
-//
-//        console.log('Data limite por comparar',limitDate.utc().format("YYYY-MM-DD"));
-//
-//        let payments2 = await Payment.findAll({ where: { limitDate: limitDate.utc().format("YYYY-MM-DD"), sucursalId: conf.sucursalId, sentNotifications: 1 } });
-//        console.log(`Encontrou ${payments2.length} pagamentos que estao a dois dias do limite na sucural ${conf.sucursalId}`);
-//        for (let index = 0; index < payments2.length; index++) {
-//            const payment = payments2[index];
-//
-//            //2. Para cada Pagamento enviar a segunda notificacao de Pagamento (depois sinalizar o pagamento como sendo notificado )
-//            carier = await Carier.findOne({
-//                where: { studentId: payment.studentId }
-//            });
-//
-//            await Payment.update(
-//                { sentNotifications: 2, updatedBy: 1 },
-//                { where: { id: payment.id } },
-//                { fields: ['sentNotifications', 'updatedBy'] },
-//            )
-//
-//        }
+       // 3. Buscar todos os pagamentos que estão a dois dias de expirar o prazo de pagamento e que ainda nao tenham sido notificados a segunda vez, enviar a notificacao e sinalizar
+       let limitDate=moment([today.getFullYear(), today.getMonth(), today.getDate()+3])
+
+       console.log('Data limite por comparar',limitDate.utc().format("YYYY-MM-DD"));
+
+       let payments2 = await Payment.findAll({ where: { limitDate: limitDate.utc().format("YYYY-MM-DD"), sucursalId: conf.sucursalId, sentNotifications: 1 } });
+       console.log(`Encontrou ${payments2.length} pagamentos que estao a dois dias do limite na sucural ${conf.sucursalId}`);
+       for (let index = 0; index < payments2.length; index++) {
+           const payment = payments2[index];
+
+           //2. Para cada Pagamento enviar a segunda notificacao de Pagamento (depois sinalizar o pagamento como sendo notificado )
+           carier = await Carier.findOne({
+               where: { studentId: payment.studentId }
+           });
+
+           await Payment.update(
+               { sentNotifications: 2, updatedBy: 1 },
+               { where: { id: payment.id } },
+               { fields: ['sentNotifications', 'updatedBy'] },
+           )
+
+       }
 
 
-        //  4. Buscar todos os pagamentos cuja a data actual e maior que a data limite de Pagamnto e que ainda nao tenham multa e aplicar a multa
-//        let today2 = new Date();
-//        let afterLimit=moment([today2.getFullYear(), today2.getMonth(), today2.getDate()]);
-//        console.log(afterLimit.utc().format("YYYY-MM-DD"))
-//        let payments3 = await Payment.findAll({ where: { limitDate: afterLimit.utc().format("YYYY-MM-DD"), sucursalId: conf.sucursalId, hasFine: false } });
-//        console.log(`Encontrou ${payments3.length} pagamentos atrasados na sucural ${conf.sucursalId}`);
-//        for (let index = 0; index < payments3.length; index++) {
-//            const payment = payments3[index];
-//            //2. Para cada Pagamento enviar a segunda notificacao de Pagamento (depois sinalizar o pagamento como sendo notificado )
-//            carier = await Carier.findOne({
-//                where: { studentId: payment.studentId }
-//            });
-//
-////Verifica em quanto tempo o pagamento esta atrazado
-//let days=moment(payment.limitDate).fromNow();
-//
-//let fineConfig=await  FineConfig.findOne({where:{sucursalId:conf.sucursalId,endDay:{gte:days},startDay:{lte:days}}});
-//            //Aplicar a Multa
-//            let fine = payment.total * fineConfig.percentage/100;
-//            let newTotal = payment.total + fine;
-//            await Payment.update(
-//                { fine, total: newTotal, hasFine: true, updatedBy: 1 },
-//                { where: { id: payment.id } },
-//                { fields: ['total', 'fine', 'hasFine', 'updatedBy'] },
-//
-//            )
-//
-//            console.log('Multa aplicada para o pagamento: ', payment.id);
-//
-//        }
+       //  4. Buscar todos os pagamentos cuja a data actual e maior que a data limite de Pagamnto e que ainda nao tenham multa e aplicar a multa
+       let today2 = new Date();
+       let afterLimit=moment([today2.getFullYear(), today2.getMonth(), today2.getDate()]);
+       console.log(afterLimit.utc().format("YYYY-MM-DD"))
+       let payments3 = await Payment.findAll({ where: { limitDate: afterLimit.utc().format("YYYY-MM-DD"), sucursalId: conf.sucursalId, hasFine: false } });
+       console.log(`Encontrou ${payments3.length} pagamentos atrasados na sucural ${conf.sucursalId}`);
+       for (let index = 0; index < payments3.length; index++) {
+           const payment = payments3[index];
+           //2. Para cada Pagamento enviar a segunda notificacao de Pagamento (depois sinalizar o pagamento como sendo notificado )
+           carier = await Carier.findOne({
+               where: { studentId: payment.studentId }
+           });
 
-    }// Fim da iteracao de configuracoes de sucursais
+     //Verifica em quanto tempo o pagamento esta atrazado
+     let days=moment(payment.limitDate).fromNow();
+
+     let fineConfig=await  FineConfig.findOne({where:{sucursalId:conf.sucursalId,endDay:{gte:days},startDay:{lte:days}}});
+           //Aplicar a Multa
+           let fine = payment.total * fineConfig.percentage/100;
+           let newTotal = payment.total + fine;
+           await Payment.update(
+               { fine, total: newTotal, hasFine: true, updatedBy: 1 },
+               { where: { id: payment.id } },
+               { fields: ['total', 'fine', 'hasFine', 'updatedBy'] },
+
+           )
+
+           console.log('Multa aplicada para o pagamento: ', payment.id);
+
+       }
+
+    }
+    
+    // Fim da iteracao de configuracoes de sucursais
     console.log('Fim da execução da task de multa e notificações');
 
 
 });
+
 //Inicia a execução da task
 task.start();
 
 
 function sendNotification(cellphone, message, senderId) {
-    let path= `/api/sendhttp.php?mobiles=${cellphone}&authkey=${keys.msg91AuthKey}&route=4&sender=${senderId}&message=${message}`;
+    let path= `/api/sendhttp.php?mobiles=${cellphone}&authkey=${process.env.MSG_91_AUTH_KEY}&route=4&sender=${senderId}&message=${message}`;
   console.log('Path: ',path);
     var options = {
         "method": "GET",
         "hostname": "world.msg91.com",
         "port": 443,
-        "path": `/api/sendhttp.php?mobiles=${cellphone}&authkey=${keys.msg91AuthKey}&route=4&sender=${senderId}&message=${message}`,
+        "path": `/api/sendhttp.php?mobiles=${cellphone}&authkey=${process.env.MSG_91_AUTH_KEY}&route=4&sender=${senderId}&message=${message}`,
         "headers": {}
     };
 

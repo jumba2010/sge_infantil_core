@@ -6,8 +6,6 @@ const Carier = require('../../models/carier');
 const SentMessage = require('../../models/sentmessage');
 const Student = require('../../models/student');
 var http = require("https");
-const keys = require('./../../config/keys');
-var qs=require('querystring');
 
 //Cria Membro
 router.post('/carrier', async (req,res)=>{
@@ -51,7 +49,7 @@ async function sendNotification(cellphone, message, senderId,studentId,sucursalI
         "method": "GET",
         "hostname": "world.msg91.com",
         "port": 443,
-        "path": `/api/sendhttp.php?mobiles=${cellphone}&authkey=${keys.msg91AuthKey}&unicode=1&route=4&sender=${senderId}&message=${stringfyedMessage}`,
+        "path": `/api/sendhttp.php?mobiles=${cellphone}&authkey=${process.env.MSG_91_AUTH_KEY}&unicode=1&route=4&sender=${senderId}&message=${stringfyedMessage}`,
         "headers": {}
     };
 
