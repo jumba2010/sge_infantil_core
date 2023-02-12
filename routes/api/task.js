@@ -38,7 +38,7 @@ var task = cron.schedule('*/2 * * * *', async () => {
                        carier = await Carier.findOne({
                            where: { studentId: payment.studentId }
                        });
-       count++;
+                        count++;
                        console.log('A enviar notificacao para o encaregado',carier.name,carier.contact)
 
                        await Payment.update(

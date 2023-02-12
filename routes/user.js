@@ -8,7 +8,6 @@ const UserSucursal=require('../models/usersucursal');
 const Transaction=require('../models/transaction');
 const ProfileTransaction=require('../models/profiletransaction');
 var http = require("https");
-const keys = require('./../config/keys');
 const router=express.Router();
 
 //Cria Utilizador
@@ -157,7 +156,7 @@ router.get('/all', async (req,res)=>{
             //Busca as sucursais do user
             var sucursals=[]
             let userSucursals=await  UserSucursal.findAll({raw: true,where:{userId:user.id}
-            });    
+            });   
    
            for (let index = 0; index < userSucursals.length; index++) {
                       let sucursal=await  Sucursal.findOne({raw: true,where:{id:userSucursals[index].sucursalId}

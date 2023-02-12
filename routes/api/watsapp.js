@@ -1,5 +1,7 @@
 const twilio = require('twilio');
 const router=express.Router();
+const Configuration = require('../../models/paymentconfig');
+const Carier = require('../../models/carier');
 
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const optionsList = ['Ver Meses em divida', 'Ver aproveitamento do seu educando', 'Informacao geral da escola'];
@@ -50,9 +52,13 @@ router.post('/webhook', (req, res) => {
 
 } else {
 
+    
     res.status(401).send('Unauthorized');  
 }
 });
+
+
+
 
 module.exports=router;
 

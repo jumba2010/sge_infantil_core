@@ -3,7 +3,7 @@ const router = express.Router();
 const Class = require('../models/class');
 const Teacher = require('../models/teacher');
 const Sucursal = require('../models/sucursal');
-
+const StudentClasses = require('../models/studentClasses');
 // Get all classes
 router.get('/', (req, res) => {
   Class.findAll()
@@ -17,79 +17,79 @@ router.get('/', (req, res) => {
 
 // Get classes by sucursal
 router.get('/sucursal/:sucursalId', (req, res) => {
-    Class.findAll({ where: { sucursalId: req.params.sucursalId }, include: [{ model: Teacher }] })
-      .then(classes => {
-        res.json(classes);
-      })
-      .catch(error => {
-        res.status(400).json({ error });
-      });
-  });
-
-  // Get teachers by sucursal
-  router.get('/teachers/sucursal/:sucursalId', (req, res) => {
-    Teacher.findAll({ where: { sucursalId: req.params.sucursalId } })
-      .then(teachers => {
-        res.json(teachers);
-      })
-      .catch(error => {
-        res.status(400).json({ error });
-      });
-  });
-
-
-  // Get classes by teacher and sucursal
-router.get('/teacher/:teacherId/sucursal/:sucursalId', (req, res) => {
-    Class.findAll({
-      where: {
-        teacherId: req.params.teacherId,
-        sucursalId: req.params.sucursalId
-      },
-      include: [{ model: Teacher }, { model: Sucursal }],
+  Class.findAll({ where: { sucursalId: req.params.sucursalId }, include: [{ model: Teacher }] })
+    .then(classes => {
+      res.json(classes);
     })
-      .then(classes => {
-        res.json(classes);
+    .catch(error => {
+      res.status(400).json({ error });
+    });
+});
+
+// Get teachers by sucursal
+router.get('/teachers/sucursal/:sucursalId', (req, res) => {
+  Teacher.findAll({ where: { sucursalId: req.params.sucursalId } })
+    .then(teachers => {
+      res.json(teachers);
+    })
+    .catch(error => {
+      res.status(400).json({ error });
+    });
+});
+
+
+// Get classes by teacher and sucursal
+router.get('/teacher/:teacherId/sucursal/:sucursalId', (req, res) => {
+  Class.findAll({
+    where: {
+      teacherId: req.params.teacherId,
+      sucursalId: req.params.sucursalId
+    },
+    include: [{ model: Teacher }, { model: Sucursal }],
+  })
+    .then(classes => {
+      res.json(classes);
+    })
+    .catch(error => {
+      res.status(400).json({ error });
+    });
+});
+
+// Assign students to a class
+router.put('/:id/student', (req, res) => {
+  let students = req.body.students;
+  students.forEach(studentId => {
+    let classId = req.params.id;
+    let stuentClass = { studentId, classId }
+    StudentClasses.create(stuentClass)
+      .then(classJson => {
+        res.json(classJson);
       })
       .catch(error => {
         res.status(400).json({ error });
       });
+
   });
-  
-  // Assign teacher to a class
-  router.put('/:id/teacher', (req, res) => {
-    Class.findByPk(req.params.id)
-      .then(theClass => {
-        theClass.setTeacher(req.body.teacherId)
-          .then(() => {
-            res.json({ success: true });
-          })
-          .catch(error => {
-            res.status(400).json({ error });
-          });
-      })
-      .catch(error => {
-        res.status(400).json({ error });
-      });
-  });
-  
+});
+
 // Assign teacher to a class
 router.put('/:id/teacher', (req, res) => {
-    Class.findByPk(req.params.id)
-      .then(theClass => {
-        theClass.setTeacher(req.body.teacherId)
-          .then(() => {
-            res.json({ success: true });
-          })
-          .catch(error => {
-            res.status(400).json({ error });
-          });
-      })
-      .catch(error => {
-        res.status(400).json({ error });
-      });
-  });
-  
-  
+  Class.findByPk(req.params.id)
+    .then(theClass => {
+      theClass.setTeacher(req.body.teacherId)
+        .then(() => {
+          res.json({ success: true });
+        })
+        .catch(error => {
+          res.status(400).json({ error });
+        });
+    })
+    .catch(error => {
+      res.status(400).json({ error });
+    });
+});
+
+
 
 // Create a new class
 router.post('/', (req, res) => {

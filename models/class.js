@@ -7,8 +7,13 @@ const Class = sequelize.define('class', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  subject: {
-    type: Sequelize.STRING,
+  level: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
+
+  nrOfStudents: {
+    type: Sequelize.INTEGER,
     allowNull: false,
   },
 });

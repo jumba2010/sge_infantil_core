@@ -17,8 +17,8 @@ const studentGrade = require('./routes/studentgrade');
 const path = require('path');
 const registration = require('./routes/registration');
 const frequency = require('./routes/frequency');
-const smsntification = require('./routes/api/smsnotification');
-const task = require('./routes/api/task');
+// const smsntification = require('./routes/api/smsnotification');
+// const task = require('./routes/api/task');
 const sincronizeData = require('./routes/api/syncronize');
 const logininfo = require('./routes/logininfo');
 const logger = require('morgan');
@@ -69,10 +69,10 @@ app.use('/api/profile', profile);
 app.use('/api/payment', payment);
 app.use('/api/sucursal', sucursal);
 app.use('/api/registration', registration);
-app.use('/api/smsntification', smsntification);
+//app.use('/api/smsntification', smsntification);
 app.use('/api/frequency', frequency);
 app.use('/api/logininfo', logininfo);
-app.use('/api/task', task);
+//app.use('/api/task', task);
 app.use('/api/teacher', teacher);
 app.use('/api/class', classRoute);
 
@@ -81,7 +81,7 @@ app.use('/api/student-grade', studentGrade);
 app.use('/api/subject', subject);
 app.use('/api/subject-test', subjectTest);
 
-app.use('/api/sincronize', router);
+//app.use('/api/sincronize', router);
 
 app.use('/public/files', express.static(__dirname + '/public/files'));
 app.use(express.static(__dirname + '/public'));

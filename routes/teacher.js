@@ -3,8 +3,8 @@ const router = express.Router();
 const Teacher = require('../models/teacher');
 
 // Get all teachers
-router.get('/', (req, res) => {
-  Teacher.findAll()
+router.get('/:sucursalId', (req, res) => {
+  Teacher.findAll({raw: true,where:{sucursalId:req.params.sucursalId}})
     .then(teachers => {
       res.json(teachers);
     })
@@ -20,6 +20,7 @@ router.post('/', (req, res) => {
       res.json(teacher);
     })
     .catch(error => {
+      console.log(error)
       res.status(400).json({ error });
     });
 });
