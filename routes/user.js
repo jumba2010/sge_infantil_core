@@ -27,7 +27,7 @@ router.put('/password/:id', async (req,res)=>{
     const salt=await bcrypt.genSalt(10);
     try{
       password= await bcrypt.hash(password,salt);
-      let payload =  { password,updatedBy };
+      let payload =  { password,updatedBy,passwordUpdated:'1' };
       let user = await crudService.update(constants.USER_TABLE,req.params.id,payload);
       res.send(user)
     }
